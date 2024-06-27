@@ -10,9 +10,11 @@ public class ModbusCrc16
 	}
 
 	/// <summary>
-	///		将 CRC16 寄存器重置为全 1，使本类对象恢复为刚构造时的样子。
-	///		所有之前进行到一半的 CRC 计算全部终止，计算结果作废。
+	///		重置 CRC 寄存器。
 	/// </summary>
+	/// <remarks>
+	///		每次开始新的一轮 CRC 计算前都需要重置 CRC 寄存器，否则当前轮添加计算的字节会和上一轮的字节混在一起。
+	/// </remarks>
 	public void Reset()
 	{
 		Register = ushort.MaxValue;
@@ -39,6 +41,10 @@ public class ModbusCrc16
 	/// </summary>
 	private ushort _polynomial = 0xA001;
 
+	/// <summary>
+	///		添加一个字节进行计算。
+	/// </summary>
+	/// <param name="value"></param>
 	public void Add(byte value)
 	{
 		Register ^= value;
@@ -53,6 +59,10 @@ public class ModbusCrc16
 		}
 	}
 
+	/// <summary>
+	///		添加一段内存中的每个字节进行计算。
+	/// </summary>
+	/// <param name="datas"></param>
 	public void Add(Memory<byte> datas)
 	{
 		foreach (byte value in datas.Span)
@@ -61,8 +71,14 @@ public class ModbusCrc16
 		}
 	}
 
+	/// <summary>
+	///		CRC 寄存器的值。
+	/// </summary>
 	public ushort Register { get; private set; } = ushort.MaxValue;
 
+	/// <summary>
+	///		CRC 寄存器的高字节。
+	/// </summary>
 	public byte RegisterHighByte
 	{
 		get
@@ -71,6 +87,9 @@ public class ModbusCrc16
 		}
 	}
 
+	/// <summary>
+	///		CRC 寄存器的低字节。
+	/// </summary>
 	public byte RegisterLowByte
 	{
 		get
