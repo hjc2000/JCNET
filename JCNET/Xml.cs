@@ -4,21 +4,31 @@ using System.Xml.Serialization;
 namespace JCNET;
 
 /// <summary>
-/// XML 反序列化错误
+///		XML 反序列化错误
 /// </summary>
 public class XmlDeserializeException : Exception
 {
 	public XmlDeserializeException() { }
-	public XmlDeserializeException(string? message, Exception? innerException) : base(message, innerException) { }
+
+	public XmlDeserializeException(string? message, Exception? innerException)
+		: base(message, innerException)
+	{
+
+	}
 }
 
 /// <summary>
-/// XML 序列化错误
+///		XML 序列化错误
 /// </summary>
 public class XmlSerializeException : Exception
 {
 	public XmlSerializeException() { }
-	public XmlSerializeException(string? message, Exception? innerException) : base(message, innerException) { }
+
+	public XmlSerializeException(string? message, Exception? innerException)
+		: base(message, innerException)
+	{
+
+	}
 }
 
 public static class Xml
