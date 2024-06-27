@@ -1,5 +1,6 @@
 ﻿namespace JCNET.定时器;
-public class Timer
+
+public class SystemTimer
 {
 	/// <summary>
 	/// 以一定的间隔执行一个任务一段时间
@@ -7,7 +8,9 @@ public class Timer
 	/// <param name="action"></param>
 	/// <param name="duration_in_milliseconds">持续时间</param>
 	/// <param name="interval_in_milliseconds">间隔</param>
-	public static void ExecuteForAPeriodOfTime(Action action, int duration_in_milliseconds, int interval_in_milliseconds)
+	public static void ExecuteForAPeriodOfTime(Action action,
+		int duration_in_milliseconds,
+		int interval_in_milliseconds)
 	{
 		System.Timers.Timer timer = new()
 		{
@@ -63,7 +66,8 @@ public class Timer
 	/// <param name="action">时间到达后的回调函数</param>
 	/// <param name="interval_in_milliseconds">定时间隔，单位 ms</param>
 	/// <param name="token">取消定时任务</param>
-	public static void SetInterval(Action action, int interval_in_milliseconds, CancellationToken token)
+	public static void SetInterval(Action action,
+		int interval_in_milliseconds, CancellationToken token)
 	{
 		System.Timers.Timer timer = new()
 		{
