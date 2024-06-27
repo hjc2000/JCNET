@@ -1,5 +1,8 @@
 ﻿namespace JCNET.流;
 
+/// <summary>
+///		能够将多个流在字节层面拼接在一起，形成一个字节流。
+/// </summary>
 public class JoinedStream : Stream
 {
 	private bool _disposed = false;
@@ -95,7 +98,8 @@ public class JoinedStream : Stream
 	/// <param name="cancellationToken"></param>
 	/// <returns></returns>
 	/// <exception cref="TaskCanceledException"></exception>
-	public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+	public override async Task<int> ReadAsync(byte[] buffer, int offset,
+		int count, CancellationToken cancellationToken)
 	{
 		while (!cancellationToken.IsCancellationRequested)
 		{
@@ -128,7 +132,8 @@ public class JoinedStream : Stream
 		throw new TaskCanceledException();
 	}
 
-	public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+	public override async ValueTask<int> ReadAsync(Memory<byte> buffer,
+		CancellationToken cancellationToken = default)
 	{
 		// 当前流为空，需要加载一个新的流
 		if (_currentStream == null)
@@ -159,42 +164,34 @@ public class JoinedStream : Stream
 		}
 	}
 
-	#region 不实现的功能
+	#region 不支持的功能
 	public override long Length
 	{
 		get
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 	}
 
 	public override void Flush()
 	{
-		throw new NotImplementedException();
+		throw new NotSupportedException();
 	}
-	/// <summary>
-	/// 本流不支持同步读取
-	/// </summary>
-	/// <param name="buffer"></param>
-	/// <param name="offset"></param>
-	/// <param name="count"></param>
-	/// <returns></returns>
-	/// <exception cref="NotImplementedException"></exception>
 	public override int Read(byte[] buffer, int offset, int count)
 	{
-		throw new NotImplementedException();
+		throw new NotSupportedException();
 	}
 	public override long Seek(long offset, SeekOrigin origin)
 	{
-		throw new NotImplementedException();
+		throw new NotSupportedException();
 	}
 	public override void SetLength(long value)
 	{
-		throw new NotImplementedException();
+		throw new NotSupportedException();
 	}
 	public override void Write(byte[] buffer, int offset, int count)
 	{
-		throw new NotImplementedException();
+		throw new NotSupportedException();
 	}
 	#endregion
 
