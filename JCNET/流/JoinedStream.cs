@@ -57,7 +57,7 @@ public class JoinedStream : Stream
 
 		set
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 	}
 
@@ -216,9 +216,12 @@ public class JoinedStream : Stream
 	public interface IStreamSource
 	{
 		/// <summary>
-		///		JoinedStream 在当前流读到尽头的时候就会调用此函数。在此函数中需要调用 JoinedStream
-		///		的 AppendStream 函数，否则本函数返回后 JoinedStream 就会结束。
+		///		JoinedStream 在当前流读到尽头的时候就会调用此函数。
 		/// </summary>
+		/// <remarks>
+		///		用户需要在此函数中需要调用 JoinedStream 的 AppendStream 函数，
+		///		否则本函数返回后 JoinedStream 就会结束。
+		/// </remarks>
 		/// <returns></returns>
 		Task GetNextStreamAsync();
 	}
