@@ -1,5 +1,8 @@
 ﻿namespace JCNET.Modbus.ModbusException;
 
+/// <summary>
+///		modbus 异常
+/// </summary>
 public class ModbusException : Exception
 {
 	public ModbusException()
