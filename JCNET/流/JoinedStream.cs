@@ -62,23 +62,23 @@ public class JoinedStream : Stream
 	}
 
 	/// <summary>
-	///		尝试从队列和 IJoinedStreamCurrentStreamEndHandler 中获取新的流。如果两者都没有，返回 null
+	///		尝试从队列和 IStreamSource 中获取新的流。如果两者都没有，返回 null
 	/// </summary>
 	/// <returns></returns>
 	private async Task<Stream?> TryGetNewStream()
 	{
 		try
 		{
-			// 如果队列空了，先触发 OnCurrentStreamEnd 然后再尝试退队
-			if (_streamQueue.Count == 0 && CurrentStreamEndHandler != null)
+			// 如果队列空了，先触发 GetNextStreamAsync 然后再尝试退队
+			if (_streamQueue.Count == 0 && StreamSource != null)
 			{
-				await CurrentStreamEndHandler.OnCurrentStreamEnd();
+				await StreamSource.GetNextStreamAsync();
 			}
 
 			// 退队
 			lock (_streamQueue)
 			{
-				/* 如果 OnCurrentStreamEnd 后有流入队，则退队成功，否则退队失败，抛出异常*/
+				/* 如果 GetNextStreamAsync 后有流入队，则退队成功，否则退队失败，抛出异常*/
 				return _streamQueue.Dequeue();
 			}
 		}
@@ -210,18 +210,18 @@ public class JoinedStream : Stream
 		}
 	}
 
-	public IJoinedStreamCurrentStreamEndHandler? CurrentStreamEndHandler { get; set; }
-}
-
-/// <summary>
-///		用于向 JoinedStream 提供流。
-/// </summary>
-public interface IJoinedStreamCurrentStreamEndHandler
-{
 	/// <summary>
-	///		JoinedStream 在当前流读到尽头的时候就会调用此函数。在此函数中需要调用 JoinedStream
-	///		的 AppendStream 函数，否则本函数返回后 JoinedStream 就会结束。
+	///		用于向 JoinedStream 提供流。
 	/// </summary>
-	/// <returns></returns>
-	Task OnCurrentStreamEnd();
+	public interface IStreamSource
+	{
+		/// <summary>
+		///		JoinedStream 在当前流读到尽头的时候就会调用此函数。在此函数中需要调用 JoinedStream
+		///		的 AppendStream 函数，否则本函数返回后 JoinedStream 就会结束。
+		/// </summary>
+		/// <returns></returns>
+		Task GetNextStreamAsync();
+	}
+
+	public IStreamSource? StreamSource { get; set; }
 }
