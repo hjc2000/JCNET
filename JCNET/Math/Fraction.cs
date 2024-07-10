@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 namespace JCNET.Math;
 
@@ -11,22 +12,29 @@ public readonly struct Fraction
 
 	public Fraction(BigInteger num)
 	{
-		_num = num;
-		_den = 1;
+		Num = num;
+		Den = 1;
 	}
 
 	public Fraction(BigInteger num, BigInteger den)
 	{
-		_num = num;
-		_den = den;
+		if (den == 0)
+		{
+			throw new ArgumentException("分母不能为 0");
+		}
+
+		Num = num;
+		Den = den;
 	}
 
 	/// <summary>
 	///		使用字符串进行初始化。
+	/// </summary>
+	/// <remarks>
 	///		传进来的字符串可以是分数的字符串，也可以是整型或浮点的字符串，例如：
 	///			"5/2", "5", "5.12"
 	///		这些都是合法的。
-	/// </summary>
+	/// </remarks>
 	/// <param name="str"></param>
 	public Fraction(string str)
 	{
@@ -34,8 +42,8 @@ public readonly struct Fraction
 		if (index == 0)
 		{
 			// 第 1 个字符就是 / 号
-			_num = 0;
-			_den = 1;
+			Num = 0;
+			Den = 1;
 			return;
 		}
 
@@ -49,8 +57,13 @@ public readonly struct Fraction
 
 			string num_string = str[..index];
 			string den_string = str[(index + 1)..];
-			_num = BigInteger.Parse(num_string);
-			_den = BigInteger.Parse(den_string);
+			Num = BigInteger.Parse(num_string);
+			Den = BigInteger.Parse(den_string);
+			if (Den == 0)
+			{
+				throw new ArgumentException("分母不能为 0");
+			}
+
 			return;
 		}
 
@@ -59,8 +72,8 @@ public readonly struct Fraction
 		if (index < 0)
 		{
 			// 传进来的是整型字符串
-			_num = BigInteger.Parse(str);
-			_den = 1;
+			Num = BigInteger.Parse(str);
+			Den = 1;
 			return;
 		}
 
@@ -68,12 +81,12 @@ public readonly struct Fraction
 		// 计算小数点后有多少位
 		int count = str.Length - 1 - index;
 		str = str.Remove(index, 1);
-		_num = BigInteger.Parse(str);
-		_den = BigInteger.Pow(10, count);
+		Num = BigInteger.Parse(str);
+		Den = BigInteger.Pow(10, count);
 	}
 
-	private readonly BigInteger _num = 0;
-	private readonly BigInteger _den = 1;
+	public BigInteger Num { get; } = 0;
+	public BigInteger Den { get; } = 1;
 
 	/// <summary>
 	///		化简。返回化简后的新分数对象。
@@ -81,10 +94,10 @@ public readonly struct Fraction
 	/// <returns></returns>
 	public Fraction Simplify()
 	{
-		BigInteger gcd = BigInteger.GreatestCommonDivisor(_num, _den);
-		BigInteger num = _num / gcd;
-		BigInteger den = _den / gcd;
-		if (_den < 0)
+		BigInteger gcd = BigInteger.GreatestCommonDivisor(Num, Den);
+		BigInteger num = Num / gcd;
+		BigInteger den = Den / gcd;
+		if (Den < 0)
 		{
 			num = -num;
 			den = -den;
@@ -100,7 +113,7 @@ public readonly struct Fraction
 	/// <returns></returns>
 	public static Fraction operator -(Fraction fraction1)
 	{
-		Fraction ret = new(-fraction1._num, fraction1._den);
+		Fraction ret = new(-fraction1.Num, fraction1.Den);
 		return ret.Simplify();
 	}
 
@@ -113,13 +126,13 @@ public readonly struct Fraction
 	public static Fraction operator +(Fraction fraction1, Fraction fraction2)
 	{
 		// 两个分数的分母的最小公倍数
-		BigInteger den_lcm = fraction1._den *
-			fraction2._den /
-			BigInteger.GreatestCommonDivisor(fraction1._den, fraction2._den);
+		BigInteger den_lcm = fraction1.Den *
+			fraction2.Den /
+			BigInteger.GreatestCommonDivisor(fraction1.Den, fraction2.Den);
 
 		// 分子放大与分母相同的倍数
-		BigInteger num1 = fraction1._num * (den_lcm / fraction1._den);
-		BigInteger num2 = fraction2._num * (den_lcm / fraction2._den);
+		BigInteger num1 = fraction1.Num * (den_lcm / fraction1.Den);
+		BigInteger num2 = fraction2.Num * (den_lcm / fraction2.Den);
 
 		Fraction ret = new(num1 + num2, den_lcm);
 		return ret.Simplify();
@@ -145,8 +158,8 @@ public readonly struct Fraction
 	/// <returns></returns>
 	public static Fraction operator *(Fraction fraction1, Fraction fraction2)
 	{
-		BigInteger num = fraction1._num * fraction2._num;
-		BigInteger den = fraction1._den * fraction2._den;
+		BigInteger num = fraction1.Num * fraction2.Num;
+		BigInteger den = fraction1.Den * fraction2.Den;
 		Fraction ret = new(num, den);
 		return ret.Simplify();
 	}
@@ -163,6 +176,60 @@ public readonly struct Fraction
 		return ret.Simplify();
 	}
 
+	#region 比较运算符
+	public static bool operator <(Fraction fraction1, Fraction fraction2)
+	{
+		return fraction1.Num * fraction2.Den < fraction2.Num * fraction1.Den;
+	}
+
+	public static bool operator >(Fraction fraction1, Fraction fraction2)
+	{
+		return fraction1.Num * fraction2.Den > fraction2.Num * fraction1.Den;
+	}
+
+	public static bool operator <=(Fraction fraction1, Fraction fraction2)
+	{
+		return fraction1.Num * fraction2.Den <= fraction2.Num * fraction1.Den;
+	}
+
+	public static bool operator >=(Fraction fraction1, Fraction fraction2)
+	{
+		return fraction1.Num * fraction2.Den >= fraction2.Num * fraction1.Den;
+	}
+
+	public static bool operator ==(Fraction fraction1, Fraction fraction2)
+	{
+		Fraction f1 = fraction1.Simplify();
+		Fraction f2 = fraction2.Simplify();
+		return f1.Num == f2.Num && f1.Den == f2.Den;
+	}
+
+	public static bool operator !=(Fraction fraction1, Fraction fraction2)
+	{
+		return !(fraction1 == fraction2);
+	}
+
+	public override bool Equals([NotNullWhen(true)] object? obj)
+	{
+		if (obj is null)
+		{
+			return false;
+		}
+
+		if (obj is not Fraction)
+		{
+			return false;
+		}
+
+		return this == (Fraction)obj;
+	}
+
+	public override int GetHashCode()
+	{
+		return Num.GetHashCode() ^ Den.GetHashCode();
+	}
+	#endregion
+
 	/// <summary>
 	///		倒数
 	/// </summary>
@@ -170,7 +237,12 @@ public readonly struct Fraction
 	{
 		get
 		{
-			return new Fraction(_den, _num);
+			if (Num == 0)
+			{
+				throw new InvalidOperationException("分子为 0，不允许取倒数。");
+			}
+
+			return new Fraction(Den, Num);
 		}
 	}
 
@@ -181,7 +253,7 @@ public readonly struct Fraction
 	{
 		get
 		{
-			return _num / _den;
+			return Num / Den;
 		}
 	}
 	/// <summary>
@@ -191,12 +263,12 @@ public readonly struct Fraction
 	{
 		get
 		{
-			return _num % _den;
+			return Num % Den;
 		}
 	}
 
 	public override string ToString()
 	{
-		return $"{_num} / {_den}";
+		return $"{Num} / {Den}";
 	}
 }
