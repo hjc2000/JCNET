@@ -34,4 +34,9 @@ public class Range<T> where T : IComparisonOperators<T, T, bool>
 		// 排除了开区间时在区间左右端点的情况后，就按照闭区间的标准去衡量是否超出范围。
 		return value < Left || value > Right;
 	}
+
+	public bool InRange(T value)
+	{
+		return !OutOfRange(value);
+	}
 }
