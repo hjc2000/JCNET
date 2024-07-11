@@ -33,7 +33,10 @@ public partial class JoinedStream : Stream
 			await _currentStream.DisposeAsync();
 		}
 	}
+}
 
+public partial class JoinedStream
+{
 	/// <summary>
 	/// 
 	/// </summary>
@@ -88,7 +91,7 @@ public partial class JoinedStream : Stream
 	}
 
 	private Stream? _currentStream = null;
-	public IAsyncEnumerator<Stream> StreamEnumerator { get; set; }
+	private IAsyncEnumerator<Stream> StreamEnumerator { get; set; }
 }
 
 public partial class JoinedStream
