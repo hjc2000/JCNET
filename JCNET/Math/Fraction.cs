@@ -6,7 +6,7 @@ namespace JCNET.Math;
 /// <summary>
 ///		分数类
 /// </summary>
-public readonly struct Fraction
+public readonly struct Fraction : IComparisonOperators<Fraction, Fraction, bool>
 {
 	public Fraction() { }
 

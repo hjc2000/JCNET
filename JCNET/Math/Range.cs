@@ -2,7 +2,7 @@
 
 namespace JCNET.Math;
 
-public class Range<T> where T : INumber<T>
+public class Range<T> where T : IComparisonOperators<T, T, bool>
 {
 	public Range() { }
 
