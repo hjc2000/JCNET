@@ -6,7 +6,9 @@ namespace JCNET.Math;
 /// <summary>
 ///		分数类
 /// </summary>
-public readonly struct Fraction : IComparisonOperators<Fraction, Fraction, bool>
+public readonly struct Fraction :
+	IComparisonOperators<Fraction, Fraction, bool>,
+	IParsable<Fraction>
 {
 	public Fraction() { }
 
@@ -270,5 +272,32 @@ public readonly struct Fraction : IComparisonOperators<Fraction, Fraction, bool>
 	public override string ToString()
 	{
 		return $"{Num} / {Den}";
+	}
+
+	public static Fraction Parse(string s, IFormatProvider? provider)
+	{
+		return new Fraction(s);
+	}
+
+	public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Fraction result)
+	{
+		if (s is null)
+		{
+			result = new Fraction();
+			return false;
+		}
+
+		try
+		{
+			result = new Fraction(s);
+			return true;
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e.ToString());
+		}
+
+		result = new Fraction();
+		return false;
 	}
 }
