@@ -1,5 +1,12 @@
 ﻿namespace JCNET.Parse;
 
+public struct ParseKeyValueResult
+{
+	public ParseKeyValueResult() { }
+	public string Key { get; set; } = string.Empty;
+	public string Value { get; set; } = string.Empty;
+}
+
 public static class KeyValueParseExtension
 {
 	/// <summary>
@@ -8,7 +15,7 @@ public static class KeyValueParseExtension
 	/// </summary>
 	/// <param name="str"></param>
 	/// <returns></returns>
-	public static (bool success, string key, string value) ParseKeyValueEx(this string str)
+	public static ParseKeyValueResult? ParseKeyValueEx(this string str)
 	{
 		try
 		{
@@ -21,13 +28,16 @@ public static class KeyValueParseExtension
 			// 获取等于号后面的内容
 			string value = str[(index + 1)..];
 
-			key = Trim(key);
-			value = Trim(value);
-			return (true, key, value);
+			ParseKeyValueResult result = new()
+			{
+				Key = Trim(key),
+				Value = Trim(value)
+			};
+			return result;
 		}
 		catch
 		{
-			return (false, string.Empty, string.Empty);
+			return null;
 		}
 	}
 
