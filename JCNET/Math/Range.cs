@@ -19,6 +19,11 @@ public class Range<T> where T : IComparisonOperators<T, T, bool>
 	public T Left { get; set; } = default!;
 	public T Right { get; set; } = default!;
 
+	/// <summary>
+	///		是否超出范围
+	/// </summary>
+	/// <param name="value"></param>
+	/// <returns>超出范围返回 true，没超出则返回 false。</returns>
 	public bool OutOfRange(T value)
 	{
 		if (LeftIsOpen && value == Left)
@@ -35,6 +40,11 @@ public class Range<T> where T : IComparisonOperators<T, T, bool>
 		return value < Left || value > Right;
 	}
 
+	/// <summary>
+	///		是否在范围内
+	/// </summary>
+	/// <param name="value"></param>
+	/// <returns>在范围内返回 true，不在范围内返回 false。</returns>
 	public bool InRange(T value)
 	{
 		return !OutOfRange(value);
