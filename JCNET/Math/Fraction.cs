@@ -8,6 +8,10 @@ namespace JCNET.Math;
 /// </summary>
 public readonly struct Fraction :
 	IComparisonOperators<Fraction, Fraction, bool>,
+	IAdditionOperators<Fraction, Fraction, Fraction>,
+	ISubtractionOperators<Fraction, Fraction, Fraction>,
+	IMultiplyOperators<Fraction, Fraction, Fraction>,
+	IDivisionOperators<Fraction, Fraction, Fraction>,
 	IParsable<Fraction>
 {
 	public Fraction() { }
