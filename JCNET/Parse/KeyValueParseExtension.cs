@@ -10,8 +10,8 @@ public struct ParseKeyValueResult
 public static class KeyValueParseExtension
 {
 	/// <summary>
-	/// 解析 key = value 形式的字符串。key, value 支持使用单引号、双引号包起来，就像：
-	/// key = "value" , key = 'value' , 'key' = 'value' ...... 等
+	///		解析 key = value 形式的字符串。key, value 支持使用单引号、双引号包起来，就像：
+	///		key = "value" , key = 'value' , 'key' = 'value' ...... 等
 	/// </summary>
 	/// <param name="str"></param>
 	/// <returns></returns>
