@@ -1,6 +1,8 @@
-﻿namespace JCNET.Math;
+﻿using System.Numerics;
 
-public class Range<T> where T : IComparable<T>
+namespace JCNET.Math;
+
+public class Range<T> where T : INumber<T>
 {
 	public Range() { }
 
@@ -19,17 +21,17 @@ public class Range<T> where T : IComparable<T>
 
 	public bool OutOfRange(T value)
 	{
-		if (LeftIsOpen && value.CompareTo(Left) == 0)
+		if (LeftIsOpen && value == Left)
 		{
 			return true;
 		}
 
-		if (RightIsOpen && value.CompareTo(Right) == 0)
+		if (RightIsOpen && value == Right)
 		{
 			return true;
 		}
 
 		// 排除了开区间时在区间左右端点的情况后，就按照闭区间的标准去衡量是否超出范围。
-		return value.CompareTo(Left) < 0 || value.CompareTo(Right) > 0;
+		return value < Left || value > Right;
 	}
 }
