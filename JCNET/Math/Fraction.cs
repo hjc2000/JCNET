@@ -12,6 +12,7 @@ public readonly struct Fraction :
 	ISubtractionOperators<Fraction, Fraction, Fraction>,
 	IMultiplyOperators<Fraction, Fraction, Fraction>,
 	IDivisionOperators<Fraction, Fraction, Fraction>,
+	IUnaryNegationOperators<Fraction, Fraction>,
 	IParsable<Fraction>
 {
 	public Fraction() { }
