@@ -7,13 +7,19 @@ namespace JCNET;
 /// </summary>
 public static class Json
 {
+	static Json()
+	{
+		DefaultJsonSerializerOptions = new JsonSerializerOptions()
+		{
+			AllowTrailingCommas = true,
+			WriteIndented = true,
+		};
+	}
+
 	/// <summary>
 	///		默认的 json 序列化选项。
 	/// </summary>
-	public static JsonSerializerOptions DefaultJsonSerializerOptions { get; set; } = new JsonSerializerOptions()
-	{
-		WriteIndented = true,
-	};
+	public static JsonSerializerOptions DefaultJsonSerializerOptions { get; set; }
 
 	/// <summary>
 	///		将对象转化为 json 字符串。
