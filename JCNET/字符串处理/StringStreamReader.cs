@@ -1,7 +1,7 @@
 ﻿namespace JCNET.字符串处理;
 
 /// <summary>
-///		流式阅读字符串
+///		字符串流式阅读器
 /// </summary>
 public class StringStreamReader
 {
