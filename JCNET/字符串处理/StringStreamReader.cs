@@ -75,4 +75,16 @@ public class StringStreamReader
 		_pos += length;
 		return ret;
 	}
+
+	/// <summary>
+	///		从流中读取与 str 相同长度的子字符串并比较是否与 str 相等。
+	///		会推进流的位置。
+	/// </summary>
+	/// <param name="str"></param>
+	/// <returns></returns>
+	public bool ReadAndCompare(string str)
+	{
+		string read_result = Read(str.Length);
+		return read_result == str;
+	}
 }
