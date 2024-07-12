@@ -20,7 +20,7 @@ public static class Json
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="obj"></param>
-	/// <returns></returns>
+	/// <returns>json 字符串。</returns>
 	public static string ToJson<T>(T obj)
 	{
 		return JsonSerializer.Serialize(obj, DefaultJsonSerializerOptions);
@@ -53,16 +53,35 @@ public static class Json
 			cancellationToken);
 	}
 
+	/// <summary>
+	///		从 json 中反序列化得到对象。
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="json"></param>
+	/// <returns>反序列化得到的对象。如果 json 为空或其他原因，可能会返回 null。</returns>
 	public static T? FromJson<T>(string json)
 	{
 		return JsonSerializer.Deserialize<T>(json);
 	}
 
+	/// <summary>
+	///		从 json 中反序列化得到对象。
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="json"></param>
+	/// <returns>反序列化得到的对象。如果 json 为空或其他原因，可能会返回 null。</returns>
 	public static T? FromJson<T>(Stream json)
 	{
 		return JsonSerializer.Deserialize<T>(json);
 	}
 
+	/// <summary>
+	///		从 json 中反序列化得到对象。
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="json"></param>
+	/// <param name="cancellationToken"></param>
+	/// <returns>反序列化得到的对象。如果 json 为空或其他原因，可能会返回 null。</returns>
 	public static async Task<T?> FromJsonAsync<T>(Stream json, CancellationToken cancellationToken = default)
 	{
 		return await JsonSerializer.DeserializeAsync<T>(json, (JsonSerializerOptions?)null, cancellationToken);
