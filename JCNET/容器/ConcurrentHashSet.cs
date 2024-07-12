@@ -2,8 +2,9 @@
 using System.Collections.Concurrent;
 
 namespace JCNET.容器;
+
 /// <summary>
-///		线程安全的哈希表。基于 ConcurrentDictionary，缩水使用。键旧当作哈希表的键，值储存 null。
+///		线程安全的哈希表。基于 ConcurrentDictionary，缩水使用。字典的键当作哈希表的键，值储存 null。
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class ConcurrentHashSet<T> : ICollection<T> where T : class
