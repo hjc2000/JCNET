@@ -92,4 +92,21 @@ public static class Json
 	{
 		return await JsonSerializer.DeserializeAsync<T>(json, (JsonSerializerOptions?)null, cancellationToken);
 	}
+
+	/// <summary>
+	///		利用 json 进行对象的深拷贝。
+	/// </summary>
+	/// <remarks>
+	///		原理是先序列化为 json，然后反序列化为对象，这样就得到一个深拷贝了。
+	/// </remarks>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="obj"></param>
+	/// <returns></returns>
+	/// <exception cref="JsonException"></exception>
+	public static T DeepClone<T>(T obj)
+	{
+		string json = ToJson(obj);
+		T ret = FromJson<T>(json) ?? throw new JsonException("反序列化失败，无法深拷贝。检查对象是不是没有 public 的无参构造函数。");
+		return ret;
+	}
 }
