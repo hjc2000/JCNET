@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 
 namespace JCNET;
 public class History<T> : IEnumerable<T> where T : class
