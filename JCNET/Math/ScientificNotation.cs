@@ -22,18 +22,15 @@ public class ScientificNotation
 			return;
 		}
 
-		if (System.Math.Abs(num) > 1)
-		{
-			Exponent = (int)System.Math.Log10(num);
-			Base = num / (int)System.Math.Pow(10, Exponent);
+		Exponent = (int)System.Math.Log10(num);
+		Base = num / System.Math.Pow(10, Exponent);
 
-			// 经过上面的计算后，Base 一定是绝对值小于 10 的。
-			// 规范化的科学计数法要求基数的绝对值大于等于 1，除非整个数确切地是 0.
-			while (System.Math.Abs(Base) < 1)
-			{
-				Exponent--;
-				Base *= 10;
-			}
+		// 经过上面的计算后，Base 一定是绝对值小于 10 的。
+		// 规范化的科学计数法要求基数的绝对值大于等于 1，除非整个数确切地是 0.
+		while (System.Math.Abs(Base) < 1)
+		{
+			Exponent--;
+			Base *= 10;
 		}
 
 		SignificantDigits = significant_digits;
