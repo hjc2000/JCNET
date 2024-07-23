@@ -6,6 +6,23 @@ public class Range<T> where T : IComparisonOperators<T, T, bool>
 {
 	public Range() { }
 
+	public Range(T left, T right)
+	{
+		Left = left;
+		Right = right;
+	}
+
+	public Range(T left, T right, bool leftIsOpen, bool rightIsOpen)
+	{
+		LeftIsOpen = leftIsOpen;
+		RightIsOpen = rightIsOpen;
+		Left = left;
+		Right = right;
+	}
+
+	public T Left { get; set; } = default!;
+	public T Right { get; set; } = default!;
+
 	/// <summary>
 	///		左区间是开区间
 	/// </summary>
@@ -15,9 +32,6 @@ public class Range<T> where T : IComparisonOperators<T, T, bool>
 	///		右区间是开区间
 	/// </summary>
 	public bool RightIsOpen { get; set; } = false;
-
-	public T Left { get; set; } = default!;
-	public T Right { get; set; } = default!;
 
 	/// <summary>
 	///		是否超出范围
