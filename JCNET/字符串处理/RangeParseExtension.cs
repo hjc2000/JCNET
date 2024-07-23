@@ -1,4 +1,4 @@
-﻿namespace JCNET.Parse;
+﻿namespace JCNET.字符串处理;
 
 public struct ParseRangeResult
 {

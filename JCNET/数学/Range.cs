@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace JCNET.Math;
+namespace JCNET.数学;
 
 public class Range<T> where T : IComparisonOperators<T, T, bool>
 {

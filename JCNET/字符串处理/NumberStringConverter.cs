@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Numerics;
 
-namespace JCNET.Parse;
+namespace JCNET.字符串处理;
 
 /// <summary>
 ///		进行字符串和数字之间的转换

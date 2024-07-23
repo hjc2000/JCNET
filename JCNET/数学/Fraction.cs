@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
-namespace JCNET.Math;
+namespace JCNET.数学;
 
 /// <summary>
 ///		分数类
@@ -153,7 +153,7 @@ public readonly struct Fraction :
 	/// <returns></returns>
 	public static Fraction operator -(Fraction fraction1, Fraction fraction2)
 	{
-		Fraction ret = fraction1 + (-fraction2);
+		Fraction ret = fraction1 + -fraction2;
 		return ret.Simplify();
 	}
 

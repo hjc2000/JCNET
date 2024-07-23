@@ -1,4 +1,4 @@
-﻿namespace JCNET.Math;
+﻿namespace JCNET.数学;
 
 /// <summary>
 ///		表示 Base * 10 ^ Exponent 这种科学计数法的数
