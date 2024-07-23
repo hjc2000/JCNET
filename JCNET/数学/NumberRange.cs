@@ -2,17 +2,17 @@
 
 namespace JCNET.数学;
 
-public class Range<T> where T : IComparisonOperators<T, T, bool>
+public class NumberRange<T> where T : IComparisonOperators<T, T, bool>
 {
-	public Range() { }
+	public NumberRange() { }
 
-	public Range(T left, T right)
+	public NumberRange(T left, T right)
 	{
 		Left = left;
 		Right = right;
 	}
 
-	public Range(T left, T right, bool leftIsOpen, bool rightIsOpen)
+	public NumberRange(T left, T right, bool leftIsOpen, bool rightIsOpen)
 	{
 		LeftIsOpen = leftIsOpen;
 		RightIsOpen = rightIsOpen;
