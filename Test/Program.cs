@@ -1,7 +1,4 @@
-﻿using JCNET.容器;
+﻿using JCNET.Math;
 
-List<int> list = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-await foreach (int item in list.AsIAsyncEnumerableEx())
-{
-	Console.WriteLine(item);
-}
+ScientificNotation sc = new(1201, 2);
+Console.WriteLine(sc.ToString());
