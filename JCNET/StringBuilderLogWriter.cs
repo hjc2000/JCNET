@@ -8,6 +8,38 @@ namespace JCNET;
 public class StringBuilderLogWriter : TextWriter
 {
 	/// <summary>
+	///		构造函数。内部的 StringBuilder 的容量为 10000 个字符。
+	/// </summary>
+	public StringBuilderLogWriter()
+	{
+		_sb.Capacity = 10000;
+	}
+
+	/// <summary>
+	///		构造函数。
+	/// </summary>
+	/// <param name="capacity">用来设置内部的 StringBuilder 的容量。</param>
+	public StringBuilderLogWriter(int capacity)
+	{
+		_sb.Capacity = capacity;
+	}
+
+	/// <summary>
+	///		转发内部的 StringBuilder 的 Capacity。
+	/// </summary>
+	public int Capacity
+	{
+		get
+		{
+			return _sb.Capacity;
+		}
+		set
+		{
+			_sb.Capacity = value;
+		}
+	}
+
+	/// <summary>
 	///		字符编码。本类为：Encoding.Unicode
 	/// </summary>
 	public override Encoding Encoding
