@@ -8,36 +8,28 @@ namespace JCNET;
 public class StringBuilderLogWriter : TextWriter
 {
 	/// <summary>
-	///		构造函数。内部的 StringBuilder 的容量为 10000 个字符。
+	///		构造函数。设置 MaxCapacity 为 10000。
 	/// </summary>
 	public StringBuilderLogWriter()
 	{
-		_sb.Capacity = 10000;
+		MaxCapacity = 10000;
+		_sb.Capacity = MaxCapacity;
 	}
 
 	/// <summary>
 	///		构造函数。
 	/// </summary>
-	/// <param name="capacity">用来设置内部的 StringBuilder 的容量。</param>
+	/// <param name="capacity">用来设置 MaxCapacity。</param>
 	public StringBuilderLogWriter(int capacity)
 	{
 		_sb.Capacity = capacity;
+		_sb.Capacity = MaxCapacity;
 	}
 
 	/// <summary>
-	///		转发内部的 StringBuilder 的 Capacity。
+	///		最多允许容纳的字符数。
 	/// </summary>
-	public int Capacity
-	{
-		get
-		{
-			return _sb.Capacity;
-		}
-		set
-		{
-			_sb.Capacity = value;
-		}
-	}
+	public int MaxCapacity { get; set; }
 
 	/// <summary>
 	///		字符编码。本类为：Encoding.Unicode
@@ -53,12 +45,37 @@ public class StringBuilderLogWriter : TextWriter
 	private readonly StringBuilder _sb = new();
 
 	/// <summary>
+	///		写入时会触发此事件。
+	/// </summary>
+	public event Action? WriteEvent;
+
+	/// <summary>
 	///		写一个字符串。
 	/// </summary>
 	/// <param name="value"></param>
 	public override void Write(string? value)
 	{
 		_sb.Append(value);
+		if (_sb.Length > MaxCapacity)
+		{
+			_sb.Remove(0, _sb.Length - MaxCapacity);
+		}
+
+		WriteEvent?.Invoke();
+	}
+
+	/// <summary>
+	///		冲洗时会触发此事件。
+	/// </summary>
+	public event Action? FlushEvent;
+
+	/// <summary>
+	///		冲洗。
+	/// </summary>
+	public override void Flush()
+	{
+		base.Flush();
+		FlushEvent?.Invoke();
 	}
 
 	/// <summary>
