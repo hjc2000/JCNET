@@ -1,10 +1,9 @@
-﻿using JCNET;
+﻿using JCNET.字符串处理;
 
-StringBuilderLogWriter writer = new();
-TextWriter origin_out = Console.Out;
-Console.SetOut(writer);
-Console.WriteLine("666666666666");
-Console.SetOut(origin_out);
+UrlPath path1 = new("/p/");
+UrlPath path2 = new("/p/p1/");
 
-string writer_string = writer.ToString();
-Console.WriteLine(writer_string);
+Console.WriteLine(path1);
+Console.WriteLine(path2);
+Console.WriteLine(path2 == path1);
+Console.WriteLine(path2 < path1);
