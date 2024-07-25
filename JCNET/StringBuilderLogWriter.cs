@@ -124,16 +124,16 @@ public class StringBuilderLogWriter : TextWriter
 }
 
 /// <summary>
-///		StringBuilderLogWriter 为 IServiceCollection 提供的扩展方法。
+///		StringBuilderLogWriter 依赖注射器
 /// </summary>
-public static class StringBuilderLogWriter_IServiceCollectionExtension
+public static class StringBuilderLogWriterInjector
 {
 	/// <summary>
 	///		构造一个 StringBuilderLogWriter 对象，以单例模式添加到服务中，并设置为
 	///		Console 的输出。
 	/// </summary>
 	/// <param name="service"></param>
-	public static void AddSingleton_StringBuilderLogWriter_AndSetAsOut(this IServiceCollection service)
+	public static void InjectStringBuilderLogWriter(this IServiceCollection service)
 	{
 		StringBuilderLogWriter writer = new();
 		Console.SetOut(writer);
