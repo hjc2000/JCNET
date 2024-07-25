@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Text;
 
 namespace JCNET;
 
@@ -119,5 +120,26 @@ public class StringBuilderLogWriter : TextWriter
 	public override string ToString()
 	{
 		return _sb.ToString();
+	}
+}
+
+/// <summary>
+///		StringBuilderLogWriter 为 IServiceCollection 提供的扩展方法。
+/// </summary>
+public static class StringBuilderLogWriter_IServiceCollectionExtension
+{
+	/// <summary>
+	///		构造一个 StringBuilderLogWriter 对象，以单例模式添加到服务中，并设置为
+	///		Console 的输出。
+	/// </summary>
+	/// <param name="service"></param>
+	public static void AddAddSingletonAndSetAsOut(this IServiceCollection service)
+	{
+		StringBuilderLogWriter writer = new();
+		Console.SetOut(writer);
+		service.AddSingleton((s) =>
+		{
+			return writer;
+		});
 	}
 }
