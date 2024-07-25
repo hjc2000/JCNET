@@ -1,7 +1,7 @@
 ﻿using JCNET.字符串处理;
 
-UrlPath path1 = new("/p/");
-UrlPath path2 = new("/p/p1/");
+RoutePath path1 = new(new Uri("https://fanyi.baidu.com/"));
+RoutePath path2 = new(new Uri("https://fanyi.baidu.com/p"));
 
 Console.WriteLine(path1);
 Console.WriteLine(path2);
