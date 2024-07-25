@@ -133,7 +133,7 @@ public static class StringBuilderLogWriter_IServiceCollectionExtension
 	///		Console 的输出。
 	/// </summary>
 	/// <param name="service"></param>
-	public static void AddAddSingletonAndSetAsOut(this IServiceCollection service)
+	public static void AddSingleton_StringBuilderLogWriter_AndSetAsOut(this IServiceCollection service)
 	{
 		StringBuilderLogWriter writer = new();
 		Console.SetOut(writer);
