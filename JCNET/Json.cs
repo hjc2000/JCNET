@@ -40,7 +40,8 @@ public static class Json
 	/// <param name="stream"></param>
 	public static void ToJson<T>(T obj, Stream stream)
 	{
-		JsonSerializer.Serialize(stream, obj, DefaultJsonSerializerOptions);
+		JsonSerializer.Serialize(stream, obj,
+			DefaultJsonSerializerOptions);
 	}
 
 	/// <summary>
@@ -55,8 +56,7 @@ public static class Json
 		CancellationToken cancellationToken = default)
 	{
 		await JsonSerializer.SerializeAsync(stream, obj,
-			DefaultJsonSerializerOptions,
-			cancellationToken);
+			DefaultJsonSerializerOptions, cancellationToken);
 	}
 
 	/// <summary>
@@ -64,10 +64,16 @@ public static class Json
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="json"></param>
-	/// <returns>反序列化得到的对象。如果 json 为空或其他原因，可能会返回 null。</returns>
-	public static T? FromJson<T>(string json)
+	/// <returns>反序列化得到的对象</returns>
+	public static T FromJson<T>(string json)
 	{
-		return JsonSerializer.Deserialize<T>(json);
+		T? result = JsonSerializer.Deserialize<T>(json);
+		if (result is null)
+		{
+			throw new JsonException("反序列化得到空对象");
+		}
+
+		return result;
 	}
 
 	/// <summary>
@@ -75,10 +81,16 @@ public static class Json
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="json"></param>
-	/// <returns>反序列化得到的对象。如果 json 为空或其他原因，可能会返回 null。</returns>
-	public static T? FromJson<T>(Stream json)
+	/// <returns>反序列化得到的对象</returns>
+	public static T FromJson<T>(Stream json)
 	{
-		return JsonSerializer.Deserialize<T>(json);
+		T? result = JsonSerializer.Deserialize<T>(json);
+		if (result is null)
+		{
+			throw new JsonException("反序列化得到空对象");
+		}
+
+		return result;
 	}
 
 	/// <summary>
@@ -88,9 +100,17 @@ public static class Json
 	/// <param name="json"></param>
 	/// <param name="cancellationToken"></param>
 	/// <returns>反序列化得到的对象。如果 json 为空或其他原因，可能会返回 null。</returns>
-	public static async Task<T?> FromJsonAsync<T>(Stream json, CancellationToken cancellationToken = default)
+	public static async Task<T> FromJsonAsync<T>(Stream json, CancellationToken cancellationToken = default)
 	{
-		return await JsonSerializer.DeserializeAsync<T>(json, (JsonSerializerOptions?)null, cancellationToken);
+		T? result = await JsonSerializer.DeserializeAsync<T>(json,
+			(JsonSerializerOptions?)null, cancellationToken);
+
+		if (result is null)
+		{
+			throw new JsonException("反序列化得到空对象");
+		}
+
+		return result;
 	}
 
 	/// <summary>
@@ -102,11 +122,10 @@ public static class Json
 	/// <typeparam name="T"></typeparam>
 	/// <param name="obj"></param>
 	/// <returns></returns>
-	/// <exception cref="JsonException"></exception>
 	public static T DeepClone<T>(T obj)
 	{
 		string json = ToJson(obj);
-		T ret = FromJson<T>(json) ?? throw new JsonException("反序列化失败，无法深拷贝。检查对象是不是没有 public 的无参构造函数。");
+		T ret = FromJson<T>(json);
 		return ret;
 	}
 }
