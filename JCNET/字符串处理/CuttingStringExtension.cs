@@ -21,13 +21,14 @@ public static class CuttingStringExtension
 			return string.Empty;
 		}
 
-		int end_index = value.IndexOf(end_string);
+		start_index += start_string.Length;
+
+		int end_index = value.IndexOf(end_string, start_index);
 		if (end_index == -1)
 		{
 			return string.Empty;
 		}
 
-		start_index += start_string.Length;
 		if (start_index >= end_index)
 		{
 			return string.Empty;
