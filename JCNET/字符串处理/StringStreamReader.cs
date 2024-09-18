@@ -5,6 +5,10 @@
 /// </summary>
 public class StringStreamReader
 {
+	/// <summary>
+	///		传入一个字符串，然后可以流式阅读此字符串。
+	/// </summary>
+	/// <param name="str"></param>
 	public StringStreamReader(string str)
 	{
 		_str = str;

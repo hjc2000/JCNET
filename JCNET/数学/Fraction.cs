@@ -15,14 +15,27 @@ public readonly struct Fraction :
 	IUnaryNegationOperators<Fraction, Fraction>,
 	IParsable<Fraction>
 {
+	/// <summary>
+	///		默认构造函数
+	/// </summary>
 	public Fraction() { }
 
+	/// <summary>
+	///		从 BigInteger 构造分数。
+	/// </summary>
+	/// <param name="num">分子</param>
 	public Fraction(BigInteger num)
 	{
 		Num = num;
 		Den = 1;
 	}
 
+	/// <summary>
+	///		从 BigInteger 构造分数。
+	/// </summary>
+	/// <param name="num">分子</param>
+	/// <param name="den">分母</param>
+	/// <exception cref="ArgumentException"></exception>
 	public Fraction(BigInteger num, BigInteger den)
 	{
 		if (den == 0)
@@ -92,7 +105,14 @@ public readonly struct Fraction :
 		Den = BigInteger.Pow(10, count);
 	}
 
+	/// <summary>
+	///		分子
+	/// </summary>
 	public BigInteger Num { get; } = 0;
+
+	/// <summary>
+	///		分母
+	/// </summary>
 	public BigInteger Den { get; } = 1;
 
 	/// <summary>
@@ -184,26 +204,56 @@ public readonly struct Fraction :
 	}
 
 	#region 比较运算符
+	/// <summary>
+	///		小于
+	/// </summary>
+	/// <param name="fraction1"></param>
+	/// <param name="fraction2"></param>
+	/// <returns></returns>
 	public static bool operator <(Fraction fraction1, Fraction fraction2)
 	{
 		return fraction1.Num * fraction2.Den < fraction2.Num * fraction1.Den;
 	}
 
+	/// <summary>
+	///		大于
+	/// </summary>
+	/// <param name="fraction1"></param>
+	/// <param name="fraction2"></param>
+	/// <returns></returns>
 	public static bool operator >(Fraction fraction1, Fraction fraction2)
 	{
 		return fraction1.Num * fraction2.Den > fraction2.Num * fraction1.Den;
 	}
 
+	/// <summary>
+	///		小于等于
+	/// </summary>
+	/// <param name="fraction1"></param>
+	/// <param name="fraction2"></param>
+	/// <returns></returns>
 	public static bool operator <=(Fraction fraction1, Fraction fraction2)
 	{
 		return fraction1.Num * fraction2.Den <= fraction2.Num * fraction1.Den;
 	}
 
+	/// <summary>
+	///		大于等于
+	/// </summary>
+	/// <param name="fraction1"></param>
+	/// <param name="fraction2"></param>
+	/// <returns></returns>
 	public static bool operator >=(Fraction fraction1, Fraction fraction2)
 	{
 		return fraction1.Num * fraction2.Den >= fraction2.Num * fraction1.Den;
 	}
 
+	/// <summary>
+	///		等于
+	/// </summary>
+	/// <param name="fraction1"></param>
+	/// <param name="fraction2"></param>
+	/// <returns></returns>
 	public static bool operator ==(Fraction fraction1, Fraction fraction2)
 	{
 		Fraction f1 = fraction1.Simplify();
@@ -211,11 +261,22 @@ public readonly struct Fraction :
 		return f1.Num == f2.Num && f1.Den == f2.Den;
 	}
 
+	/// <summary>
+	///		不等于
+	/// </summary>
+	/// <param name="fraction1"></param>
+	/// <param name="fraction2"></param>
+	/// <returns></returns>
 	public static bool operator !=(Fraction fraction1, Fraction fraction2)
 	{
 		return !(fraction1 == fraction2);
 	}
 
+	/// <summary>
+	///		相等
+	/// </summary>
+	/// <param name="obj"></param>
+	/// <returns></returns>
 	public override bool Equals([NotNullWhen(true)] object? obj)
 	{
 		if (obj is null)
@@ -231,6 +292,10 @@ public readonly struct Fraction :
 		return this == (Fraction)obj;
 	}
 
+	/// <summary>
+	///		获取哈希码
+	/// </summary>
+	/// <returns></returns>
 	public override int GetHashCode()
 	{
 		return Num.GetHashCode() ^ Den.GetHashCode();
@@ -274,17 +339,36 @@ public readonly struct Fraction :
 		}
 	}
 
+	/// <summary>
+	///		将分数转成字符串
+	/// </summary>
+	/// <returns></returns>
 	public override string ToString()
 	{
 		return $"{Num} / {Den}";
 	}
 
+	/// <summary>
+	///		从字符串中解析出分数
+	/// </summary>
+	/// <param name="s"></param>
+	/// <param name="provider"></param>
+	/// <returns></returns>
 	public static Fraction Parse(string s, IFormatProvider? provider)
 	{
 		return new Fraction(s);
 	}
 
-	public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Fraction result)
+	/// <summary>
+	///		尝试从字符串中解析出分数
+	/// </summary>
+	/// <param name="s"></param>
+	/// <param name="provider"></param>
+	/// <param name="result"></param>
+	/// <returns></returns>
+	public static bool TryParse([NotNullWhen(true)] string? s,
+		IFormatProvider? provider,
+		[MaybeNullWhen(false)] out Fraction result)
 	{
 		if (s is null)
 		{
