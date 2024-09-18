@@ -1,12 +1,8 @@
 ﻿namespace JCNET.字符串处理;
 
-public struct ParseKeyValueResult
-{
-	public ParseKeyValueResult() { }
-	public string Key { get; set; } = string.Empty;
-	public string Value { get; set; } = string.Empty;
-}
-
+/// <summary>
+///		解析字符串中的键值对
+/// </summary>
 public static class KeyValueParseExtension
 {
 	/// <summary>
@@ -60,4 +56,20 @@ public static class KeyValueParseExtension
 		value = value.Trim();
 		return value;
 	}
+}
+
+/// <summary>
+///		键值对解析结果
+/// </summary>
+public class ParseKeyValueResult
+{
+	/// <summary>
+	///		解析出来的键
+	/// </summary>
+	public string Key { get; set; } = string.Empty;
+
+	/// <summary>
+	///		解析出来的值
+	/// </summary>
+	public string Value { get; set; } = string.Empty;
 }
