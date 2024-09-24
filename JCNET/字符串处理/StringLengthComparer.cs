@@ -9,7 +9,7 @@ public class StringLengthComparer : IComparer<string>
 	///		字符串长度比较器
 	/// </summary>
 	/// <param name="order">排序方式</param>
-	public StringLengthComparer(Order order)
+	public StringLengthComparer(OrderEnum order)
 	{
 		_order = order;
 	}
@@ -17,7 +17,7 @@ public class StringLengthComparer : IComparer<string>
 	/// <summary>
 	///		排序方式
 	/// </summary>
-	public enum Order
+	public enum OrderEnum
 	{
 		/// <summary>
 		///		从短到长排序
@@ -30,7 +30,7 @@ public class StringLengthComparer : IComparer<string>
 		FromLongToShort,
 	}
 
-	private Order _order = Order.FromShortToLong;
+	private OrderEnum _order = OrderEnum.FromShortToLong;
 
 	/// <summary>
 	///		从短到长排序
@@ -67,7 +67,7 @@ public class StringLengthComparer : IComparer<string>
 	/// <returns></returns>
 	public int Compare(string? x, string? y)
 	{
-		if (_order == Order.FromShortToLong)
+		if (_order == OrderEnum.FromShortToLong)
 		{
 			return CompareFromShortToLong(x, y);
 		}
