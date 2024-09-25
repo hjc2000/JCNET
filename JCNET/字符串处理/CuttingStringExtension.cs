@@ -38,7 +38,7 @@ public static class CuttingStringExtension
 	}
 
 	/// <summary>
-	///		将字符串切除中间部分
+	///		将字符串切除中间部分，留下左边和右边的部分。
 	/// </summary>
 	/// <param name="value"></param>
 	/// <param name="middle"></param>
@@ -61,10 +61,69 @@ public static class CuttingStringExtension
 			Right = sub_strings[1],
 		};
 	}
+
+	/// <summary>
+	///		全字匹配地切除中间部分
+	/// </summary>
+	/// <param name="value"></param>
+	/// <param name="middle"></param>
+	/// <returns></returns>
+	public static CuttingMiddleResult CutMiddleWholeMatch(this string value, string middle)
+	{
+		int finding_offset = 0;
+		while (true)
+		{
+			if (finding_offset >= value.Length)
+			{
+				return new CuttingMiddleResult()
+				{
+					Success = false,
+				};
+			}
+
+			int index = value.IndexOf(middle, finding_offset);
+			if (index == -1)
+			{
+				return new CuttingMiddleResult()
+				{
+					Success = false,
+				};
+			}
+
+			// 找到了，但这时候是非全字匹配的
+			finding_offset = index + middle.Length;
+			if (index > 0)
+			{
+				// middle 不是在开头位置，需要检查前一个字符
+				if (char.IsLetter(value[index - 1]) || char.IsNumber(value[index - 1]) || value[index - 1] == '_')
+				{
+					// 前一个字符是单词或下划线，不满足全字匹配
+					continue;
+				}
+			}
+
+			if (index + middle.Length < value.Length)
+			{
+				// middle 不是在结尾位置，需要检查后一个字符
+				if (char.IsLetter(value[index + middle.Length]) || char.IsNumber(value[index + middle.Length]) || value[index + middle.Length] == '_')
+				{
+					// 后一个字符是单词或下划线，不满足全字匹配
+					continue;
+				}
+			}
+
+			return new CuttingMiddleResult()
+			{
+				Success = true,
+				Left = value[..index],
+				Right = value[(index + middle.Length)..],
+			};
+		}
+	}
 }
 
 /// <summary>
-///		将字符串切除中间的结果
+///		将字符串切除中间部分后的结果。
 /// </summary>
 public class CuttingMiddleResult
 {

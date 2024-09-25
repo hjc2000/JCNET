@@ -1,7 +1,7 @@
 ﻿using JCNET.字符串处理;
 
-string s = "666777888";
-CuttingMiddleResult result = s.CutMiddle("777");
+string s = "666.777.888";
+CuttingMiddleResult result = s.CutMiddleWholeMatch("777");
 Console.WriteLine(result);
 
 result = s.CutMiddle("999");
