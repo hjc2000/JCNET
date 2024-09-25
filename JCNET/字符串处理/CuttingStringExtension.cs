@@ -36,4 +36,60 @@ public static class CuttingStringExtension
 
 		return value[start_index..end_index];
 	}
+
+	/// <summary>
+	///		将字符串切除中间部分
+	/// </summary>
+	/// <param name="value"></param>
+	/// <param name="middle"></param>
+	/// <returns></returns>
+	public static CuttingMiddleResult CutMiddle(this string value, string middle)
+	{
+		string[] sub_strings = value.Split(middle, 2);
+		if (sub_strings.Length < 2)
+		{
+			return new CuttingMiddleResult()
+			{
+				Success = false,
+			};
+		}
+
+		return new CuttingMiddleResult()
+		{
+			Success = true,
+			Left = sub_strings[0],
+			Right = sub_strings[1],
+		};
+	}
+}
+
+/// <summary>
+///		将字符串切除中间的结果
+/// </summary>
+public class CuttingMiddleResult
+{
+	/// <summary>
+	///		是否切除成功。
+	///		<br/>* 如果中间部分不存在就会切除失败
+	/// </summary>
+	public bool Success { get; set; } = false;
+
+	/// <summary>
+	///		切除中间部分后留下的左边部分
+	/// </summary>
+	public string Left { get; set; } = string.Empty;
+
+	/// <summary>
+	///		切除中间部分后留下的右边部分
+	/// </summary>
+	public string Right { get; set; } = string.Empty;
+
+	/// <summary>
+	///		转化为字符串
+	/// </summary>
+	/// <returns></returns>
+	public override string ToString()
+	{
+		return Json.ToJson(this);
+	}
 }
