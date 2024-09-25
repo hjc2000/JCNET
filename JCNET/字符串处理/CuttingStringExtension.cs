@@ -95,7 +95,9 @@ public static class CuttingStringExtension
 			if (index > 0)
 			{
 				// middle 不是在开头位置，需要检查前一个字符
-				if (char.IsLetter(value[index - 1]) || char.IsNumber(value[index - 1]) || value[index - 1] == '_')
+				if (char.IsLetter(value[index - 1]) ||
+					char.IsNumber(value[index - 1]) ||
+					value[index - 1] == '_')
 				{
 					// 前一个字符是单词或下划线，不满足全字匹配
 					continue;
@@ -105,7 +107,9 @@ public static class CuttingStringExtension
 			if (index + middle.Length < value.Length)
 			{
 				// middle 不是在结尾位置，需要检查后一个字符
-				if (char.IsLetter(value[index + middle.Length]) || char.IsNumber(value[index + middle.Length]) || value[index + middle.Length] == '_')
+				if (char.IsLetter(value[index + middle.Length]) ||
+					char.IsNumber(value[index + middle.Length]) ||
+					value[index + middle.Length] == '_')
 				{
 					// 后一个字符是单词或下划线，不满足全字匹配
 					continue;
