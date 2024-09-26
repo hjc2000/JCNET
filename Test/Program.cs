@@ -1,5 +1,6 @@
 ﻿using JCNET.字符串处理;
 
-string s = "666.888.666777";
-s = s.ReplaceWholeMatch("666", "aaa");
-Console.WriteLine(s);
+string str = @"aaa 666 777 bbb 666a777";
+
+str = str.ReplaceTwoWord("666", "777", "hahaha");
+Console.WriteLine(str);
