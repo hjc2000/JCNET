@@ -230,7 +230,7 @@ public static class StringExtension
 			sb.Append(remain[..left_word_index]);
 			sb.Append(replacement);
 			remain = remain[(right_word_index + right_word.Length)..];
-		}
+		} //while (true)
 	}
 
 	/// <summary>
