@@ -1,8 +1,5 @@
 ﻿using JCNET.字符串处理;
 
-string s = "666.888.777";
-CuttingMiddleResult result = s.CutMiddleWholeMatch("777");
-Console.WriteLine(result);
-
-result = s.CutMiddle("999");
-Console.WriteLine(result);
+string s = "666.888.666777";
+s = s.ReplaceWholeMatch("666", "aaa");
+Console.WriteLine(s);
