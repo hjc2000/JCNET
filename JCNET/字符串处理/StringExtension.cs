@@ -280,8 +280,8 @@ public static class StringExtension
 			if (remain.ContainsNotWhiteSpaceChar(left_word_index + left_word.Length, right_word_index))
 			{
 				// 左单词和右单词之间存在非空白字符
-				sb.Append(remain[..(right_word_index + right_word.Length)]);
-				remain = remain[(right_word_index + right_word.Length)..];
+				sb.Append(remain[..(left_word_index + left_word.Length)]);
+				remain = remain[(left_word_index + left_word.Length)..];
 				continue;
 			}
 
