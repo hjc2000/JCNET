@@ -1,6 +1,6 @@
 ﻿using JCNET.字符串处理;
 
-string str = @"666 777 分隔 666 777 分隔 666 777 666连起来777 666 777";
-
-str = str.ReplaceTwoWord("666", "777", "hahaha");
+string str = "function Servo.SetAbsolutePositionAndRun()";
+str = str.ReplaceTwoWord("function", "Servo.SetAbsolutePositionAndRun", "G[0] = function");
 Console.WriteLine(str);
+Console.WriteLine('0'.IsWordSeperation());

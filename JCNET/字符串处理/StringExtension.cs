@@ -8,6 +8,69 @@ namespace JCNET.字符串处理;
 public static class StringExtension
 {
 	/// <summary>
+	///		检查字符 c 在 IDE 全字匹配规则中，是否是单词的分隔符。
+	/// </summary>
+	/// <param name="c"></param>
+	/// <returns></returns>
+	public static bool IsWordSeperation(this char c)
+	{
+		if (c == '_')
+		{
+			return false;
+		}
+
+		if (char.IsWhiteSpace(c))
+		{
+			return true;
+		}
+
+		if (char.IsPunctuation(c))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/// <summary>
+	///		str 中存在非空白字符
+	/// </summary>
+	/// <param name="str"></param>
+	/// <returns>存在非空白字符则返回 true，否则返回 false。</returns>
+	public static bool ContainsNotWhiteSpaceChar(this string str)
+	{
+		for (int i = 0; i < str.Length; i++)
+		{
+			if (!char.IsWhiteSpace(str[i]))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/// <summary>
+	///		str 的 [start, end) 上存在非空白字符
+	/// </summary>
+	/// <param name="str"></param>
+	/// <param name="start"></param>
+	/// <param name="end"></param>
+	/// <returns>存在非空白字符则返回 true，否则返回 false。</returns>
+	public static bool ContainsNotWhiteSpaceChar(this string str, int start, int end)
+	{
+		for (int i = start; i < end; i++)
+		{
+			if (!char.IsWhiteSpace(str[i]))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/// <summary>
 	///		剪切字符串。
 	///		<br/>* 将字符串掐头去尾，取出位于 start_string 和 end_string 之间的子字符串，
 	///			   不包括 start_string 和 end_string 的内容。
@@ -97,11 +160,9 @@ public static class StringExtension
 			if (index > 0)
 			{
 				// middle 不是在开头位置，需要检查前一个字符
-				if (char.IsLetter(value[index - 1]) ||
-					char.IsNumber(value[index - 1]) ||
-					value[index - 1] == '_')
+				if (!value[index - 1].IsWordSeperation())
 				{
-					// 前一个字符是单词或下划线，不满足全字匹配
+					// 前一个字符不是分隔符，不满足全字匹配
 					continue;
 				}
 			}
@@ -109,11 +170,9 @@ public static class StringExtension
 			if (index + middle.Length < value.Length)
 			{
 				// middle 不是在结尾位置，需要检查后一个字符
-				if (char.IsLetter(value[index + middle.Length]) ||
-					char.IsNumber(value[index + middle.Length]) ||
-					value[index + middle.Length] == '_')
+				if (!value[index + middle.Length].IsWordSeperation())
 				{
-					// 后一个字符是单词或下划线，不满足全字匹配
+					// 后一个字符不是分隔符，不满足全字匹配
 					continue;
 				}
 			}
@@ -190,9 +249,9 @@ public static class StringExtension
 			if (left_word_index > 0)
 			{
 				// 找到了，并且不是开头，需要检查左边一个字符
-				if (!char.IsWhiteSpace(remain[left_word_index - 1]))
+				if (!remain[left_word_index - 1].IsWordSeperation())
 				{
-					// 左边一个字符不是空白字符
+					// 左边一个字符不是分隔符
 					sb.Append(remain[..(left_word_index + left_word.Length)]);
 					remain = remain[(left_word_index + left_word.Length)..];
 					continue;
@@ -209,9 +268,9 @@ public static class StringExtension
 			if (right_word_index + right_word.Length < remain.Length)
 			{
 				// 找到了，并且不是最后一个字符，需要检查右边一个字符
-				if (!char.IsWhiteSpace(remain[right_word_index + right_word.Length]))
+				if (!remain[right_word_index + right_word.Length].IsWordSeperation())
 				{
-					// 右边一个字符不是空白字符
+					// 右边一个字符不是分隔符
 					sb.Append(remain[..(right_word_index + right_word.Length)]);
 					remain = remain[(right_word_index + right_word.Length)..];
 					continue;
@@ -231,44 +290,6 @@ public static class StringExtension
 			sb.Append(replacement);
 			remain = remain[(right_word_index + right_word.Length)..];
 		} //while (true)
-	}
-
-	/// <summary>
-	///		str 中存在非空白字符
-	/// </summary>
-	/// <param name="str"></param>
-	/// <returns>存在非空白字符则返回 true，否则返回 false。</returns>
-	public static bool ContainsNotWhiteSpaceChar(this string str)
-	{
-		for (int i = 0; i < str.Length; i++)
-		{
-			if (!char.IsWhiteSpace(str[i]))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/// <summary>
-	///		str 的 [start, end) 上存在非空白字符
-	/// </summary>
-	/// <param name="str"></param>
-	/// <param name="start"></param>
-	/// <param name="end"></param>
-	/// <returns>存在非空白字符则返回 true，否则返回 false。</returns>
-	public static bool ContainsNotWhiteSpaceChar(this string str, int start, int end)
-	{
-		for (int i = start; i < end; i++)
-		{
-			if (!char.IsWhiteSpace(str[i]))
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 }
 
