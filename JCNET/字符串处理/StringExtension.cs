@@ -110,24 +110,35 @@ public static class StringExtension
 	/// <param name="match">从这里之前的部分要被截掉。</param>
 	/// <param name="trim_match">截掉的部分是否包括 match 本身。true 表示包括，false 表示不包括。</param>
 	/// <returns></returns>
-	public static ReadOnlyMemory<char> TrimHeadBeforeFirstMatch(this ReadOnlyMemory<char> self,
+	public static TrimResult TrimHeadBeforeFirstMatch(this ReadOnlyMemory<char> self,
 		ReadOnlySpan<char> match, bool trim_match)
 	{
 		int index = self.Span.IndexOf(match);
 		if (index == -1)
 		{
-			return self;
+			return new TrimResult()
+			{
+				Success = false,
+			};
 		}
 
 		if (trim_match)
 		{
 			// 截掉的部分包括 match 本身
-			return self[(index + match.Length)..];
+			return new TrimResult()
+			{
+				Success = true,
+				Remain = self[(index + match.Length)..],
+			};
 		}
 		else
 		{
 			// 截掉的部分不包括 match 本身
-			return self[index..];
+			return new TrimResult()
+			{
+				Success = true,
+				Remain = self[index..],
+			};
 		}
 	}
 
@@ -139,7 +150,7 @@ public static class StringExtension
 	/// <param name="match"></param>
 	/// <param name="trim_match"></param>
 	/// <returns></returns>
-	public static ReadOnlyMemory<char> TrimHeadBeforeFirstMatch(this string self,
+	public static TrimResult TrimHeadBeforeFirstMatch(this string self,
 		ReadOnlySpan<char> match, bool trim_match)
 	{
 		return self.AsMemory().TrimHeadBeforeFirstMatch(match, trim_match);
@@ -153,22 +164,33 @@ public static class StringExtension
 	/// <param name="match">从这里往后的尾巴将会被截掉。</param>
 	/// <param name="trim_match">截掉的部分是否包括 match 本身。true 表示包括，false 表示不包括。</param>
 	/// <returns></returns>
-	public static ReadOnlyMemory<char> TrimTailAfterFirstMatch(this ReadOnlyMemory<char> self,
+	public static TrimResult TrimTailAfterFirstMatch(this ReadOnlyMemory<char> self,
 		ReadOnlySpan<char> match, bool trim_match)
 	{
 		int index = self.Span.IndexOf(match);
 		if (index == -1)
 		{
-			return self;
+			return new TrimResult()
+			{
+				Success = false,
+			};
 		}
 
 		if (trim_match)
 		{
-			return self[..index];
+			return new TrimResult()
+			{
+				Success = true,
+				Remain = self[..index],
+			};
 		}
 		else
 		{
-			return self[..(index + match.Length)];
+			return new TrimResult()
+			{
+				Success = true,
+				Remain = self[..(index + match.Length)],
+			};
 		}
 	}
 
@@ -180,7 +202,7 @@ public static class StringExtension
 	/// <param name="match"></param>
 	/// <param name="trim_match"></param>
 	/// <returns></returns>
-	public static ReadOnlyMemory<char> TrimTailAfterFirstMatch(this string self,
+	public static TrimResult TrimTailAfterFirstMatch(this string self,
 		ReadOnlySpan<char> match, bool trim_match)
 	{
 		return self.AsMemory().TrimTailAfterFirstMatch(match, trim_match);
@@ -195,12 +217,17 @@ public static class StringExtension
 	/// <param name="start_string"></param>
 	/// <param name="end_string"></param>
 	/// <returns></returns>
-	public static ReadOnlyMemory<char> Cut(this ReadOnlyMemory<char> self,
+	public static TrimResult Cut(this ReadOnlyMemory<char> self,
 		ReadOnlySpan<char> start_string, ReadOnlySpan<char> end_string)
 	{
-		self = self.TrimHeadBeforeFirstMatch(start_string, true);
-		self = self.TrimTailAfterFirstMatch(end_string, true);
-		return self;
+		TrimResult result = self.TrimHeadBeforeFirstMatch(start_string, true);
+		if (!result.Success)
+		{
+			return result;
+		}
+
+		result = result.Remain.TrimTailAfterFirstMatch(end_string, true);
+		return result;
 	}
 
 	/// <summary>
@@ -212,7 +239,7 @@ public static class StringExtension
 	/// <param name="start_string"></param>
 	/// <param name="end_string"></param>
 	/// <returns></returns>
-	public static ReadOnlyMemory<char> Cut(this string self,
+	public static TrimResult Cut(this string self,
 		ReadOnlySpan<char> start_string, ReadOnlySpan<char> end_string)
 	{
 		return self.AsMemory().Cut(start_string, end_string);
@@ -468,6 +495,22 @@ public static class StringExtension
 	{
 		return self.AsMemory().ReplaceTwoWord(left_word, right_word, replacement);
 	}
+}
+
+/// <summary>
+///		去除内容后的结果
+/// </summary>
+public class TrimResult
+{
+	/// <summary>
+	///		去除内容成功
+	/// </summary>
+	public bool Success { get; set; } = false;
+
+	/// <summary>
+	///		去除内容成功后，剩余的部分放在这里
+	/// </summary>
+	public ReadOnlyMemory<char> Remain { get; set; } = new Memory<char>();
 }
 
 /// <summary>
