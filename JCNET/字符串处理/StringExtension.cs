@@ -105,6 +105,7 @@ public static class StringExtension
 	/// <summary>
 	///		将 match 之前的头部截掉。
 	///		<br/>* match 是从头部往后查找，找到第一个就算找到。
+	///		<br/>* match 如果为空字符串，视为没有任何匹配，也就是原封不动将 self 返回。
 	/// </summary>
 	/// <param name="self"></param>
 	/// <param name="match">从这里之前的部分要被截掉。</param>
@@ -139,6 +140,7 @@ public static class StringExtension
 	/// <summary>
 	///		将 match 之前的头部截掉。
 	///		<br/>* match 是从头部往后查找，找到第一个就算找到。
+	///		<br/>* match 如果为空字符串，视为没有任何匹配，也就是原封不动将 self 返回。
 	/// </summary>
 	/// <param name="self"></param>
 	/// <param name="match"></param>
@@ -153,6 +155,7 @@ public static class StringExtension
 	/// <summary>
 	///		将 self 从 match 处截掉尾巴。
 	///		<br/>* match 是从头部往后查找，找到第一个就算找到。
+	///		<br/>* match 如果为空字符串，视为没有任何匹配，也就是原封不动将 self 返回。
 	/// </summary>
 	/// <param name="self"></param>
 	/// <param name="match">从这里往后的尾巴将会被截掉。</param>
@@ -185,6 +188,7 @@ public static class StringExtension
 	/// <summary>
 	///		将 self 从 match 处截掉尾巴。
 	///		<br/>* match 是从头部往后查找，找到第一个就算找到。
+	///		<br/>* match 如果为空字符串，视为没有任何匹配，也就是原封不动将 self 返回。
 	/// </summary>
 	/// <param name="self"></param>
 	/// <param name="match"></param>
@@ -203,7 +207,11 @@ public static class StringExtension
 	/// <param name="self"></param>
 	/// <param name="start_string"></param>
 	/// <param name="end_string"></param>
-	/// <returns>如果 start_string 和 end_string 都不存在，则返回空字符串。</returns>
+	/// <returns>
+	///		<br/>* 如果 start_string 或 end_string 不存在，则返回空字符串。
+	///		<br/>* 如果 start_string 或 end_string 为空字符串，视为没有任何匹配，也就是他们中间没有
+	///			   任何内容，于是返回空字符串。
+	///	</returns>
 	public static ReadOnlyMemory<char> GetBetween(this ReadOnlyMemory<char> self,
 		ReadOnlySpan<char> start_string, ReadOnlySpan<char> end_string)
 	{
@@ -238,7 +246,11 @@ public static class StringExtension
 	/// <param name="self"></param>
 	/// <param name="start_string"></param>
 	/// <param name="end_string"></param>
-	/// <returns>如果 start_string 和 end_string 都不存在，则返回空字符串。</returns>
+	/// <returns>
+	///		<br/>* 如果 start_string 或 end_string 不存在，则返回空字符串。
+	///		<br/>* 如果 start_string 或 end_string 为空字符串，视为没有任何匹配，也就是他们中间没有
+	///			   任何内容，于是返回空字符串。
+	///	</returns>
 	public static ReadOnlyMemory<char> GetBetween(this string self,
 		ReadOnlySpan<char> start_string, ReadOnlySpan<char> end_string)
 	{
@@ -247,6 +259,7 @@ public static class StringExtension
 
 	/// <summary>
 	///		将字符串切除中间部分，留下左边和右边的部分。
+	///		<br/>* middle 如果为空字符串，则会导致切除中间失败，这根本没法切。
 	/// </summary>
 	/// <param name="self"></param>
 	/// <param name="middle"></param>
@@ -280,6 +293,7 @@ public static class StringExtension
 
 	/// <summary>
 	///		将字符串切除中间部分，留下左边和右边的部分。
+	///		<br/>* middle 如果为空字符串，则会导致切除中间失败，这根本没法切。
 	/// </summary>
 	/// <param name="self"></param>
 	/// <param name="middle"></param>
@@ -291,6 +305,7 @@ public static class StringExtension
 
 	/// <summary>
 	///		全字匹配地切除中间部分
+	///		<br/>* middle 如果为空字符串，则会导致切除中间失败，这根本没法切。
 	/// </summary>
 	/// <param name="self"></param>
 	/// <param name="middle"></param>
@@ -361,6 +376,7 @@ public static class StringExtension
 
 	/// <summary>
 	///		全字匹配地切除中间部分
+	///		<br/>* middle 如果为空字符串，则会导致切除中间失败，这根本没法切。
 	/// </summary>
 	/// <param name="self"></param>
 	/// <param name="middle"></param>
@@ -395,7 +411,6 @@ public static class StringExtension
 		ReadOnlyMemory<char> remain = self;
 		while (true)
 		{
-			Console.WriteLine("ReplaceWholeMatch");
 			if (remain.Length == 0)
 			{
 				return sb.ToString().AsMemory();
