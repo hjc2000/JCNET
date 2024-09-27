@@ -359,6 +359,11 @@ public static class StringExtension
 		ReadOnlyMemory<char> remain = self;
 		while (true)
 		{
+			if (remain.Length == 0)
+			{
+				return sb.ToString().AsMemory();
+			}
+
 			CuttingMiddleResult result = remain.CutMiddleWholeMatch(match);
 			if (!result.Success)
 			{
