@@ -410,6 +410,7 @@ public static class StringExtension
 				if (!self.Span[left_word_index - 1].IsWordSeperation())
 				{
 					// 左边一个字符不是分隔符
+					// 递增偏移量，推进查找进度
 					sb.Append(self[offset..(left_word_index + left_word.Length)]);
 					offset = left_word_index + left_word.Length;
 					continue;
