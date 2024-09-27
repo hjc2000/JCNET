@@ -65,7 +65,7 @@
 
 using JCNET.字符串处理;
 
-string str = "666-中间-777";
+string str = "666中间777-666-中间-777";
 CuttingMiddleResult result = str.CutMiddle("中间");
 if (result.Success)
 {

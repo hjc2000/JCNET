@@ -222,7 +222,7 @@ public static class StringExtension
 	/// <param name="self"></param>
 	/// <param name="middle"></param>
 	/// <returns></returns>
-	public static CuttingMiddleResult CutMiddle(this ReadOnlyMemory<char> self, string middle)
+	public static CuttingMiddleResult CutMiddle(this ReadOnlyMemory<char> self, ReadOnlySpan<char> middle)
 	{
 		int index = self.IndexOf(middle);
 		if (index == -1)
@@ -247,70 +247,84 @@ public static class StringExtension
 	/// <param name="self"></param>
 	/// <param name="middle"></param>
 	/// <returns></returns>
-	public static CuttingMiddleResult CutMiddle(this string self, string middle)
+	public static CuttingMiddleResult CutMiddle(this string self, ReadOnlySpan<char> middle)
 	{
 		return self.AsMemory().CutMiddle(middle);
 	}
 
-	///// <summary>
-	/////		全字匹配地切除中间部分
-	///// </summary>
-	///// <param name="memory"></param>
-	///// <param name="middle"></param>
-	///// <returns></returns>
-	//public static CuttingMiddleResult CutMiddleWholeMatch(this ReadOnlyMemory<char> memory, string middle)
-	//{
-	//	int finding_offset = 0;
-	//	ReadOnlySpan<char> target = memory.Span;
-	//	while (true)
-	//	{
-	//		if (finding_offset >= memory.Length)
-	//		{
-	//			return new CuttingMiddleResult()
-	//			{
-	//				Success = false,
-	//			};
-	//		}
+	/// <summary>
+	///		全字匹配地切除中间部分
+	/// </summary>
+	/// <param name="self"></param>
+	/// <param name="middle"></param>
+	/// <returns></returns>
+	public static CuttingMiddleResult CutMiddleWholeMatch(this ReadOnlyMemory<char> self,
+		ReadOnlySpan<char> middle)
+	{
+		int finding_offset = 0;
+		while (true)
+		{
+			if (finding_offset >= self.Length)
+			{
+				return new CuttingMiddleResult()
+				{
+					Success = false,
+				};
+			}
 
-	//		int index = target.IndexOf(middle, finding_offset);
-	//		if (index == -1)
-	//		{
-	//			return new CuttingMiddleResult()
-	//			{
-	//				Success = false,
-	//			};
-	//		}
+			int index = self.IndexOf(middle, finding_offset);
+			if (index == -1)
+			{
+				return new CuttingMiddleResult()
+				{
+					Success = false,
+				};
+			}
 
-	//		// 找到了，但这时候是非全字匹配的
-	//		finding_offset = index + middle.Length;
-	//		if (index > 0)
-	//		{
-	//			// middle 不是在开头位置，需要检查前一个字符
-	//			if (!memory[index - 1].IsWordSeperation())
-	//			{
-	//				// 前一个字符不是分隔符，不满足全字匹配
-	//				continue;
-	//			}
-	//		}
+			// 找到了，需要进一步验证是否全字匹配
+			if (index > 0)
+			{
+				// middle 不是在开头位置，需要检查前一个字符
+				if (!self.Span[index - 1].IsWordSeperation())
+				{
+					// 前一个字符不是分隔符，不满足全字匹配
+					finding_offset = index + middle.Length;
+					continue;
+				}
+			}
 
-	//		if (index + middle.Length < value.Length)
-	//		{
-	//			// middle 不是在结尾位置，需要检查后一个字符
-	//			if (!value[index + middle.Length].IsWordSeperation())
-	//			{
-	//				// 后一个字符不是分隔符，不满足全字匹配
-	//				continue;
-	//			}
-	//		}
+			if (index + middle.Length < self.Length)
+			{
+				// middle 不是在结尾位置，需要检查后一个字符
+				if (!self.Span[index + middle.Length].IsWordSeperation())
+				{
+					// 后一个字符不是分隔符，不满足全字匹配
+					finding_offset = index + middle.Length;
+					continue;
+				}
+			}
 
-	//		return new CuttingMiddleResult()
-	//		{
-	//			Success = true,
-	//			Left = memory[..index],
-	//			Right = memory[(index + middle.Length)..],
-	//		};
-	//	}
-	//}
+			// 经过验证，是全字匹配的
+			return new CuttingMiddleResult()
+			{
+				Success = true,
+				Left = self[..index],
+				Right = self[(index + middle.Length)..],
+			};
+		}
+	}
+
+	/// <summary>
+	///		全字匹配地切除中间部分
+	/// </summary>
+	/// <param name="self"></param>
+	/// <param name="middle"></param>
+	/// <returns></returns>
+	public static CuttingMiddleResult CutMiddleWholeMatch(this string self,
+		ReadOnlySpan<char> middle)
+	{
+		return self.AsMemory().CutMiddleWholeMatch(middle);
+	}
 
 	///// <summary>
 	/////		全字匹配替换
