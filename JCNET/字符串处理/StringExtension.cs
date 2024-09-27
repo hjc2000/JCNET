@@ -113,6 +113,11 @@ public static class StringExtension
 	public static ReadOnlyMemory<char> TrimHeadBeforeFirstMatch(this ReadOnlyMemory<char> self,
 		ReadOnlySpan<char> match, bool trim_match)
 	{
+		if (self.Length == 0 || match.Length == 0)
+		{
+			return self;
+		}
+
 		int index = self.IndexOf(match);
 		if (index == -1)
 		{
@@ -156,6 +161,11 @@ public static class StringExtension
 	public static ReadOnlyMemory<char> TrimTailAfterFirstMatch(this ReadOnlyMemory<char> self,
 		ReadOnlySpan<char> match, bool trim_match)
 	{
+		if (self.Length == 0 || match.Length == 0)
+		{
+			return self;
+		}
+
 		int index = self.Span.IndexOf(match);
 		if (index == -1)
 		{
@@ -197,6 +207,11 @@ public static class StringExtension
 	public static ReadOnlyMemory<char> GetBetween(this ReadOnlyMemory<char> self,
 		ReadOnlySpan<char> start_string, ReadOnlySpan<char> end_string)
 	{
+		if (self.Length == 0 || start_string.Length == 0 || end_string.Length == 0)
+		{
+			return string.Empty.AsMemory();
+		}
+
 		int origin_length = self.Length;
 		self = self.TrimHeadBeforeFirstMatch(start_string, true);
 		if (self.Length == origin_length)
@@ -238,6 +253,14 @@ public static class StringExtension
 	/// <returns></returns>
 	public static CuttingMiddleResult CutMiddle(this ReadOnlyMemory<char> self, ReadOnlySpan<char> middle)
 	{
+		if (self.Length == 0 || middle.Length == 0)
+		{
+			return new CuttingMiddleResult()
+			{
+				Success = false,
+			};
+		}
+
 		int index = self.IndexOf(middle);
 		if (index == -1)
 		{
@@ -275,6 +298,14 @@ public static class StringExtension
 	public static CuttingMiddleResult CutMiddleWholeMatch(this ReadOnlyMemory<char> self,
 		ReadOnlySpan<char> middle)
 	{
+		if (self.Length == 0 || middle.Length == 0)
+		{
+			return new CuttingMiddleResult()
+			{
+				Success = false,
+			};
+		}
+
 		int finding_offset = 0;
 		while (true)
 		{
@@ -350,6 +381,11 @@ public static class StringExtension
 	public static ReadOnlyMemory<char> ReplaceWholeMatch(this ReadOnlyMemory<char> self,
 		ReadOnlySpan<char> match, ReadOnlySpan<char> replacement)
 	{
+		if (self.Length == 0 || match.Length == 0)
+		{
+			return self;
+		}
+
 		if (match == replacement)
 		{
 			return self;
@@ -359,6 +395,7 @@ public static class StringExtension
 		ReadOnlyMemory<char> remain = self;
 		while (true)
 		{
+			Console.WriteLine("ReplaceWholeMatch");
 			if (remain.Length == 0)
 			{
 				return sb.ToString().AsMemory();
@@ -405,6 +442,11 @@ public static class StringExtension
 		ReadOnlySpan<char> left_word, ReadOnlySpan<char> right_word,
 		ReadOnlySpan<char> replacement)
 	{
+		if (self.Length == 0 || left_word.Length == 0 || right_word.Length == 0)
+		{
+			return self;
+		}
+
 		int offset = 0;
 		StringBuilder sb = new();
 		while (true)
