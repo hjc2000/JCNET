@@ -199,6 +199,13 @@ public static class StringExtension
 	{
 		int origin_length = self.Length;
 		self = self.TrimHeadBeforeFirstMatch(start_string, true);
+		if (self.Length == origin_length)
+		{
+			// 经过裁剪后长度没有任何变化，说明 start_string 和 end_string 都不存在
+			return string.Empty.AsMemory();
+		}
+
+		origin_length = self.Length;
 		self = self.TrimTailAfterFirstMatch(end_string, true);
 		if (self.Length == origin_length)
 		{
