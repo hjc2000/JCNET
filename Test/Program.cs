@@ -59,5 +59,6 @@ int i = 0;
 str = str.ReplaceTwoWord("function", "Servo.SetSpeedAndRun", $"G[{i++}] = function");
 str = str.ReplaceTwoWord("function", "Servo.SetAbsolutePositionAndRun", $"G[{i++}] = function");
 str = str.ReplaceTwoWord("function", "Servo.PresetPosition", $"G[{i++}] = function");
+str = str.ReplaceTwoWord("function", "Servo.CancelPositioning", $"G[{i++}] = function");
 str = str.ReplaceTwoWord("function", "Servo.Stop", $"G[{i++}] = function");
 Console.WriteLine(str);

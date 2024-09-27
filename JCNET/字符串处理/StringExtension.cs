@@ -230,65 +230,65 @@ public static class StringExtension
 	public static string ReplaceTwoWord(this string str,
 		string left_word, string right_word, string replacement)
 	{
-		string remain = str;
+		int offset = 0;
 		StringBuilder sb = new();
 		while (true)
 		{
-			if (remain.Length == 0)
+			if (offset >= str.Length)
 			{
 				return sb.ToString();
 			}
 
-			int left_word_index = remain.IndexOf(left_word);
+			int left_word_index = str.IndexOf(left_word, offset);
 			if (left_word_index == -1)
 			{
-				sb.Append(remain);
+				sb.Append(str, offset, str.Length - offset);
 				return sb.ToString();
 			}
 
 			if (left_word_index > 0)
 			{
 				// 找到了，并且不是开头，需要检查左边一个字符
-				if (!remain[left_word_index - 1].IsWordSeperation())
+				if (!str[left_word_index - 1].IsWordSeperation())
 				{
 					// 左边一个字符不是分隔符
-					sb.Append(remain[..(left_word_index + left_word.Length)]);
-					remain = remain[(left_word_index + left_word.Length)..];
+					sb.Append(str, offset, left_word_index + left_word.Length - offset);
+					offset = left_word_index + left_word.Length;
 					continue;
 				}
 			}
 
-			int right_word_index = remain.IndexOf(right_word);
+			int right_word_index = str.IndexOf(right_word, left_word_index + left_word.Length);
 			if (right_word_index == -1)
 			{
-				sb.Append(remain);
+				sb.Append(str, offset, str.Length - offset);
 				return sb.ToString();
 			}
 
-			if (right_word_index + right_word.Length < remain.Length)
+			if (right_word_index + right_word.Length < str.Length)
 			{
 				// 找到了，并且不是最后一个字符，需要检查右边一个字符
-				if (!remain[right_word_index + right_word.Length].IsWordSeperation())
+				if (!str[right_word_index + right_word.Length].IsWordSeperation())
 				{
 					// 右边一个字符不是分隔符
-					sb.Append(remain[..(right_word_index + right_word.Length)]);
-					remain = remain[(right_word_index + right_word.Length)..];
+					sb.Append(str, offset, right_word_index + right_word.Length - offset);
+					offset = right_word_index + right_word.Length;
 					continue;
 				}
 			}
 
-			if (remain.ContainsNotWhiteSpaceChar(left_word_index + left_word.Length, right_word_index))
+			if (str.ContainsNotWhiteSpaceChar(left_word_index + left_word.Length, right_word_index))
 			{
 				// 左单词和右单词之间存在非空白字符
-				sb.Append(remain[..(left_word_index + left_word.Length)]);
-				remain = remain[(left_word_index + left_word.Length)..];
+				sb.Append(str, offset, left_word_index + left_word.Length - offset);
+				offset = left_word_index + left_word.Length;
 				continue;
 			}
 
 			// 经过了一道道关卡，到这里可以进行替换了
-			sb.Append(remain[..left_word_index]);
+			sb.Append(str, offset, left_word_index - offset);
 			sb.Append(replacement);
-			remain = remain[(right_word_index + right_word.Length)..];
+			offset = right_word_index + right_word.Length;
 		} //while (true)
 	}
 }
