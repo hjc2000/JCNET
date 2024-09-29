@@ -58,8 +58,7 @@ public static class CutExtension
 	/// <param name="self"></param>
 	/// <param name="middle"></param>
 	/// <returns></returns>
-	public static CuttingMiddleResult CutMiddleWholeMatch(this ReadOnlyMemory<char> self,
-		ReadOnlySpan<char> middle)
+	public static CuttingMiddleResult CutMiddleWholeMatch(this ReadOnlyMemory<char> self, ReadOnlySpan<char> middle)
 	{
 		if (self.Length == 0 || middle.Length == 0)
 		{
@@ -129,8 +128,7 @@ public static class CutExtension
 	/// <param name="self"></param>
 	/// <param name="middle"></param>
 	/// <returns></returns>
-	public static CuttingMiddleResult CutMiddleWholeMatch(this string self,
-		ReadOnlySpan<char> middle)
+	public static CuttingMiddleResult CutMiddleWholeMatch(this string self, ReadOnlySpan<char> middle)
 	{
 		return self.AsMemory().CutMiddleWholeMatch(middle);
 	}
