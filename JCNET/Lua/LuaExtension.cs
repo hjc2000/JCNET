@@ -45,6 +45,10 @@ public static class LuaExtension
 	/// <returns></returns>
 	public static List<string> GetCustomGlobalVariableNames(this NLua.Lua self)
 	{
+		/* 所谓自定义，就是比 lua 解释器自带的多出来的部分，所以新建一个干净的 Lua 解释器对象，
+		 * 获取其中的全局变量名，然后获取 self 中的全局变量名，将 self 的全局变量名剔除掉干净
+		 * 的 Lua 解释器对象中的全局变量名，就得到了自定义的全局变量名。
+		 */
 		NLua.Lua lua = new();
 		List<string> origin_global_variable_names = lua.GetGlobalVariableNames();
 		List<string> current_global_variable_names = self.GetGlobalVariableNames();
