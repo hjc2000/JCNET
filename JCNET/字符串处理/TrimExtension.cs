@@ -6,7 +6,7 @@
 public static class TrimExtension
 {
 	/// <summary>
-	///		将 match 之前的头部截掉。
+	///		将第一个 match 之前的头部截掉。
 	///		<br/>* match 是从头部往后查找，找到第一个就算找到。
 	///		<br/>* match 如果为空字符串，视为没有任何匹配，也就是原封不动将 self 返回。
 	/// </summary>
@@ -41,7 +41,7 @@ public static class TrimExtension
 	}
 
 	/// <summary>
-	///		将 match 之前的头部截掉。
+	///		将第一个 match 之前的头部截掉。
 	///		<br/>* match 是从头部往后查找，找到第一个就算找到。
 	///		<br/>* match 如果为空字符串，视为没有任何匹配，也就是原封不动将 self 返回。
 	/// </summary>
@@ -56,7 +56,7 @@ public static class TrimExtension
 	}
 
 	/// <summary>
-	///		将 self 从 match 处截掉尾巴。
+	///		将 self 从第一个 match 处截掉尾巴。
 	///		<br/>* match 是从头部往后查找，找到第一个就算找到。
 	///		<br/>* match 如果为空字符串，视为没有任何匹配，也就是原封不动将 self 返回。
 	/// </summary>
@@ -89,7 +89,7 @@ public static class TrimExtension
 	}
 
 	/// <summary>
-	///		将 self 从 match 处截掉尾巴。
+	///		将 self 从第一个 match 处截掉尾巴。
 	///		<br/>* match 是从头部往后查找，找到第一个就算找到。
 	///		<br/>* match 如果为空字符串，视为没有任何匹配，也就是原封不动将 self 返回。
 	/// </summary>

@@ -156,7 +156,7 @@ public class CuttingMiddleResult
 	public ReadOnlyMemory<char> Right { get; set; } = new Memory<char>();
 
 	/// <summary>
-	///		转化为字符串
+	///		转化为 json 字符串
 	/// </summary>
 	/// <returns></returns>
 	public override string ToString()
