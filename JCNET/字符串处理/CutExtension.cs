@@ -135,3 +135,34 @@ public static class CutExtension
 		return self.AsMemory().CutMiddleWholeMatch(middle);
 	}
 }
+
+/// <summary>
+///		将字符串切除中间部分后的结果。
+/// </summary>
+public class CuttingMiddleResult
+{
+	/// <summary>
+	///		是否切除成功。
+	///		<br/>* 如果中间部分不存在就会切除失败
+	/// </summary>
+	public bool Success { get; set; } = false;
+
+	/// <summary>
+	///		切除中间部分后留下的左边部分
+	/// </summary>
+	public ReadOnlyMemory<char> Left { get; set; } = new Memory<char>();
+
+	/// <summary>
+	///		切除中间部分后留下的右边部分
+	/// </summary>
+	public ReadOnlyMemory<char> Right { get; set; } = new Memory<char>();
+
+	/// <summary>
+	///		转化为字符串
+	/// </summary>
+	/// <returns></returns>
+	public override string ToString()
+	{
+		return Json.ToJson(this);
+	}
+}
