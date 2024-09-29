@@ -1,5 +1,9 @@
-﻿using JCNET.字符串处理;
+﻿using JCNET.Lua;
+using NLua;
 
-string str = "666-中间-666";
-ReadOnlyMemory<char> result = str.GetBetween("666", "666");
-Console.WriteLine(result);
+Lua lua = new();
+string[] paths = lua.GetCustomRequireSearchPath();
+foreach (string path in paths)
+{
+	Console.WriteLine(path);
+}
