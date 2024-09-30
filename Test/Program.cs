@@ -3,9 +3,9 @@ using NLua;
 
 Lua lua = new();
 lua.DoFile(@"F:\repos\lua_test\main.lua");
-List<string> list = lua.GetGlobalVariablePaths();
-foreach (string s in list)
+LuaTable table = lua.GetTable("_G");
+Dictionary<string, object> contents = lua.GetSubTables(table, string.Empty);
+foreach (KeyValuePair<string, object> pair in contents)
 {
-	Console.WriteLine(s);
+	Console.WriteLine(pair.Key);
 }
-
