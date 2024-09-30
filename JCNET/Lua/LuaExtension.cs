@@ -59,4 +59,38 @@ public static class LuaExtension
 
 		return current_global_variable_names;
 	}
+
+	/// <summary>
+	///		获取一个 lua 表中的内容。
+	/// </summary>
+	/// <param name="self"></param>
+	/// <param name="table"></param>
+	/// <returns>字典。其中，键为访问该 lua 表中的值的路径，值就是对 lua 表中的值的引用。</returns>
+	public static Dictionary<string, object> GetTableContents(this NLua.Lua self, NLua.LuaTable table)
+	{
+		Dictionary<string, object> contents = [];
+		Dictionary<object, object> dic = self.GetTableDict(table);
+		foreach (KeyValuePair<object, object> pair in dic)
+		{
+			switch (pair.Key)
+			{
+			case long key:
+				{
+					contents[$"[{key}]"] = pair.Value;
+					break;
+				}
+			case string key:
+				{
+					contents[$".{key}"] = pair.Value;
+					break;
+				}
+			default:
+				{
+					throw new Exception("不支持的 lua 表键类型");
+				}
+			}
+		}
+
+		return contents;
+	}
 }
