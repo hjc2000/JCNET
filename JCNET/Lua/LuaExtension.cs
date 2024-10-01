@@ -127,4 +127,26 @@ public static class LuaExtension
 
 		return current_global_variable_paths;
 	}
+
+	/// <summary>
+	///		调用 lua 的 tostring 函数，将指定路径的变量转化为字符串。
+	/// </summary>
+	/// <param name="self"></param>
+	/// <param name="path">要被转化为字符串的 lua 变量的路径。</param>
+	/// <returns></returns>
+	public static string LuaObjToString(this NLua.Lua self, string path)
+	{
+		object[] ret = self.DoString($"return tostring({path})");
+		if (ret.Length == 0)
+		{
+			return string.Empty;
+		}
+
+		if (ret[0] is not string str)
+		{
+			return string.Empty;
+		}
+
+		return str;
+	}
 }

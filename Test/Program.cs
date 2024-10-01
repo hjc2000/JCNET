@@ -9,3 +9,5 @@ foreach (KeyValuePair<string, object> pair in contents)
 {
 	Console.WriteLine(pair.Key);
 }
+
+Console.WriteLine(lua.LuaObjToString("_G"));
