@@ -69,29 +69,6 @@ public static class LuaExtension
 	}
 
 	/// <summary>
-	///		获取 table 的子表。
-	/// </summary>
-	/// <param name="self"></param>
-	/// <param name="table"></param>
-	/// <param name="parent_path"></param>
-	/// <returns></returns>
-	public static Dictionary<string, object> GetSubTables(this NLua.Lua self,
-		NLua.LuaTable table, string parent_path)
-	{
-		Dictionary<string, object> contents = self.GetTableContents(table, parent_path);
-		Dictionary<string, object> sub_tables = [];
-		foreach (KeyValuePair<string, object> pair in contents)
-		{
-			if (pair.Value is LuaTable)
-			{
-				sub_tables.Add($"{parent_path}{pair.Key}", pair.Value);
-			}
-		}
-
-		return sub_tables;
-	}
-
-	/// <summary>
 	///		获取 _G 表中的全局变量的路径。
 	/// </summary>
 	/// <param path="self"></param>
