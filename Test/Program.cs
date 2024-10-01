@@ -10,4 +10,4 @@ foreach (KeyValuePair<string, object> pair in contents)
 	Console.WriteLine(pair.Key);
 }
 
-Console.WriteLine(lua.LuaObjToString("_G"));
+Console.WriteLine($"表转为字符串：{lua.LuaObjToString(table)}");

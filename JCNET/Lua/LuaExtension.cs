@@ -134,17 +134,43 @@ public static class LuaExtension
 	/// <param name="self"></param>
 	/// <param name="path">要被转化为字符串的 lua 变量的路径。</param>
 	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
 	public static string LuaObjToString(this NLua.Lua self, string path)
 	{
 		object[] ret = self.DoString($"return tostring({path})");
 		if (ret.Length == 0)
 		{
-			return string.Empty;
+			throw new Exception("lua 没有返回字符串");
 		}
 
 		if (ret[0] is not string str)
 		{
-			return string.Empty;
+			throw new Exception("lua 没有返回字符串");
+		}
+
+		return str;
+	}
+
+	/// <summary>
+	///		调用 lua 的 tostring 函数，将指定路径的变量转化为字符串。
+	/// </summary>
+	/// <param name="self"></param>
+	/// <param name="lua_obj">要被转化为字符串的 lua 对象。</param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
+	public static string LuaObjToString(this NLua.Lua self, object lua_obj)
+	{
+		self.Push(lua_obj);
+		NLua.LuaFunction func = self.GetFunction("tostring");
+		object[] ret = func.Call(lua_obj);
+		if (ret.Length == 0)
+		{
+			throw new Exception("lua 没有返回字符串");
+		}
+
+		if (ret[0] is not string str)
+		{
+			throw new Exception("lua 没有返回字符串");
 		}
 
 		return str;
