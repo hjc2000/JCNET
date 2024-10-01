@@ -1,4 +1,5 @@
-﻿using JCNET.容器;
+﻿using JCNET.字符串处理;
+using JCNET.容器;
 using NLua;
 
 namespace JCNET.Lua;
@@ -87,6 +88,17 @@ public static class LuaExtension
 		Dictionary<string, object> contents = self.GetTableContents(table, path);
 		foreach (KeyValuePair<string, object> pair in contents)
 		{
+			CuttingMiddleResult cut_result = pair.Key.CutMiddleWholeMatch("_G");
+			if (cut_result.Success)
+			{
+				continue;
+			}
+
+			if (pair.Key.StartsWith(".package.loaded."))
+			{
+				continue;
+			}
+
 			// 首先，获取到的表内容肯定是要放到 ret 中的
 			ret.Add(pair.Key, pair.Value);
 			if (pair.Value is not LuaTable sub_table)
