@@ -1,4 +1,5 @@
-﻿using NLua;
+﻿using JCNET.容器;
+using NLua;
 
 namespace JCNET.Lua;
 
@@ -25,11 +26,11 @@ public static class LuaExtension
 	/// </summary>
 	/// <param name="self"></param>
 	/// <param name="table"></param>
-	/// <param name="parent_path">table 的父路径。会把父路径拼接到 table 中的变量的路径前面。</param>
+	/// <param name="path">table 的路径。会把路径拼接到 table 中的变量的路径前面。</param>
 	/// <returns>字典。其中，键为访问该 lua 表中的值的路径，值就是对 lua 表中的值的引用。</returns>
 	/// <exception cref="Exception"></exception>
 	public static Dictionary<string, object> GetTableContents(this NLua.Lua self,
-		NLua.LuaTable table, string parent_path)
+		NLua.LuaTable table, string path)
 	{
 		Dictionary<string, object> contents = [];
 		Dictionary<object, object> dic = self.GetTableDict(table);
@@ -39,12 +40,12 @@ public static class LuaExtension
 			{
 			case long key:
 				{
-					contents[$"{parent_path}[{key}]"] = pair.Value;
+					contents[$"{path}[{key}]"] = pair.Value;
 					break;
 				}
 			case string key:
 				{
-					contents[$"{parent_path}.{key}"] = pair.Value;
+					contents[$"{path}.{key}"] = pair.Value;
 					break;
 				}
 			default:
@@ -66,6 +67,63 @@ public static class LuaExtension
 	public static Dictionary<string, object> GetTableContents(this NLua.Lua self, NLua.LuaTable table)
 	{
 		return self.GetTableContents(table, string.Empty);
+	}
+
+	/// <summary>
+	///		递归地获取表的内容
+	/// </summary>
+	/// <param name="self"></param>
+	/// <param name="table"></param>
+	/// <param name="path"></param>
+	/// <param name="table_id_set">
+	///		遍历过的表的 ID 就放到这里，避免重复递归遍历一个已经遍历过的表，甚至在出现循环引用时
+	///		导致无限递归。
+	/// </param>
+	/// <returns></returns>
+	private static Dictionary<string, object> GetTableContentsRecurse(this NLua.Lua self,
+		NLua.LuaTable table, HashSet<string> table_id_set, string path)
+	{
+		Dictionary<string, object> ret = [];
+		Dictionary<string, object> contents = self.GetTableContents(table, path);
+		foreach (KeyValuePair<string, object> pair in contents)
+		{
+			// 首先，获取到的表内容肯定是要放到 ret 中的
+			ret.Add(pair.Key, pair.Value);
+			if (pair.Value is not LuaTable sub_table)
+			{
+				// 如果该表内容不是一个表的话不需要进一步处理了
+				continue;
+			}
+
+			bool add_result = table_id_set.Add(self.LuaObjToString(sub_table));
+			if (!add_result)
+			{
+				// 已经在哈希表中了，说明已经遍历过了
+				continue;
+			}
+
+			// 该 sub_table 还没被遍历过
+			// 递归
+			Dictionary<string, object> sub_contents = self.GetTableContentsRecurse(
+				sub_table, table_id_set, pair.Key);
+
+			ret.Add(sub_contents);
+		}
+
+		return ret;
+	}
+
+	/// <summary>
+	///		递归地获取表的内容
+	/// </summary>
+	/// <param name="self"></param>
+	/// <param name="table"></param>
+	/// <param name="path"></param>
+	/// <returns></returns>
+	public static Dictionary<string, object> GetTableContentsRecurse(this NLua.Lua self,
+		NLua.LuaTable table, string path)
+	{
+		return self.GetTableContentsRecurse(table, [], path);
 	}
 
 	/// <summary>
