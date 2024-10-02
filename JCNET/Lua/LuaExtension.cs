@@ -139,42 +139,66 @@ public static class LuaExtension
 	}
 
 	/// <summary>
-	///		获取 _G 表中的全局变量的路径。
+	///		获取全局变量
 	/// </summary>
-	/// <param path="self"></param>
+	/// <param name="self"></param>
 	/// <returns></returns>
-	public static List<string> GetGlobalVariablePaths(this NLua.Lua self)
+	public static Dictionary<string, object> GetGlobalVariables(this NLua.Lua self)
 	{
-		LuaTable table = self.GetTable("_G");
-		Dictionary<string, object> dic = self.GetTableContents(table);
-		List<string> paths = [.. dic.Keys];
-		return paths;
+		Dictionary<string, object> global_varialbes = self.GetTableContents(self.GetTable("_G"));
+		return global_varialbes;
 	}
 
 	/// <summary>
-	///		获取 _G 表中的用户自定义全局变量的路径。
+	///		获取 lua 默认的，自带的全局变量。
+	/// </summary>
+	/// <returns></returns>
+	public static Dictionary<string, object> GetDefaultGlobalVariables()
+	{
+		NLua.Lua lua = new();
+		return lua.GetGlobalVariables();
+	}
+
+	/// <summary>
+	///		获取 _G 表中的用户自定义的全局变量。
 	///		<br/>* 所谓自定义，就是比 lua 解释器自带的多出来的部分
 	/// </summary>
 	/// <param path="self"></param>
 	/// <returns></returns>
-	public static List<string> GetCustomGlobalVariablePaths(this NLua.Lua self)
+	public static Dictionary<string, object> GetCustomGlobalVariables(this NLua.Lua self)
 	{
-		// 全新的空白的 lua 解释器对象。里面只有默认的，自带的全局变量
-		NLua.Lua lua = new();
-
-		// 提取默认的，自带的全局变量
-		List<string> origin_global_variable_paths = lua.GetGlobalVariablePaths();
-
-		// 提取 self 中的全局变量，然后排除掉 origin_global_variable_paths
-		List<string> current_global_variable_paths = self.GetGlobalVariablePaths();
-		foreach (string path in origin_global_variable_paths)
-		{
-			current_global_variable_paths.Remove(path);
-		}
-
-		return current_global_variable_paths;
+		Dictionary<string, object> default_global_variables = GetDefaultGlobalVariables();
+		Dictionary<string, object> current_global_variables = self.GetGlobalVariables();
+		current_global_variables.Remove(default_global_variables);
+		return current_global_variables;
 	}
 
+	/// <summary>
+	///		递归地获取全局变量中的表的内容。
+	/// </summary>
+	/// <param name="self"></param>
+	/// <returns></returns>
+	public static Dictionary<string, object> GetCustomGlobalTableContentsRecurse(this NLua.Lua self)
+	{
+		Dictionary<string, object> ret = [];
+		Dictionary<string, object> custom_global_variables = self.GetCustomGlobalVariables();
+		HashSet<string> table_id_set = [];
+		foreach (KeyValuePair<string, object> pair in custom_global_variables)
+		{
+			if (pair.Value is not LuaTable table)
+			{
+				continue;
+			}
+
+			ret.Add(pair.Key, pair.Value);
+			Dictionary<string, object> contents = self.GetTableContentsRecurse(table, table_id_set, pair.Key);
+			ret.Add(contents);
+		}
+
+		return ret;
+	}
+
+	#region ToString
 	/// <summary>
 	///		调用 lua 的 tostring 函数，将指定路径的变量转化为字符串。
 	/// </summary>
@@ -222,4 +246,6 @@ public static class LuaExtension
 
 		return str;
 	}
+	#endregion
+
 }
