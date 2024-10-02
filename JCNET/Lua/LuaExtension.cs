@@ -9,6 +9,7 @@ namespace JCNET.Lua;
 /// </summary>
 public static class LuaExtension
 {
+	#region require
 	/// <summary>
 	///		获取 package.path 中的路径。这里面存放的是 require 函数搜索模块的路径。
 	///		自定义的模块路径需要放在这里。
@@ -21,6 +22,33 @@ public static class LuaExtension
 		string[] paths = path.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 		return paths;
 	}
+
+	/// <summary>
+	///		设置 package.path。
+	/// </summary>
+	/// <param name="self"></param>
+	/// <param name="path"></param>
+	public static void SetCustomRequireSearchPath(this NLua.Lua self, string path)
+	{
+		self.DoString($"package.path={path}");
+	}
+
+	/// <summary>
+	///		向 package.path 添加内容。
+	/// </summary>
+	/// <param name="self"></param>
+	/// <param name="path"></param>
+	public static void AddCustomRequireSearchPath(this NLua.Lua self, string path)
+	{
+		string old_path = self.GetString("package.path");
+		if (!old_path.EndsWith(';'))
+		{
+			old_path += ";";
+		}
+
+		self.DoString($"package.path = {old_path}{path}");
+	}
+	#endregion
 
 	/// <summary>
 	///		获取一个 lua 表中的内容。
