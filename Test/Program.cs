@@ -2,7 +2,7 @@
 using NLua;
 
 Lua lua = new();
-lua.AddCustomRequireSearchPath(@"F:\repos\lua_test\");
+lua.AddCustomRequireSearchPath(@"F:/repos/lua_test");
 string[] require_search_paths = lua.GetCustomRequireSearchPath();
 foreach (string path in require_search_paths)
 {
