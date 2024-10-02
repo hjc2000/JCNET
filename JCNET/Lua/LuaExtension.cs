@@ -11,6 +11,21 @@ public static class LuaExtension
 {
 	#region require
 	/// <summary>
+	///		调用 lua 的 require 函数。
+	/// </summary>
+	/// <param name="self"></param>
+	/// <param name="module_path">
+	///		这里的路径并不是指文件系统路径，而是模块路径。
+	///		例如 A 目录添加到 require 搜索目录了，然后 A/B/my_module.lua 是你的模块，
+	///		那么 module_path 就是 B.my_module
+	///	</param>
+	public static void DoRequire(this NLua.Lua self, string module_path)
+	{
+		LuaFunction func = self.GetFunction("require");
+		func.Call(module_path);
+	}
+
+	/// <summary>
 	///		获取 package.path 中的路径。这里面存放的是 require 函数搜索模块的路径。
 	///		自定义的模块路径需要放在这里。
 	/// </summary>
@@ -30,6 +45,7 @@ public static class LuaExtension
 	/// <param name="path"></param>
 	public static void SetCustomRequireSearchPath(this NLua.Lua self, string path)
 	{
+		path = path.Replace('\\', '/').Replace("//", "/");
 		self.DoString($"package.path={path}");
 	}
 
@@ -46,7 +62,14 @@ public static class LuaExtension
 			old_path += ";";
 		}
 
-		self.DoString($"package.path = {old_path}{path}");
+		path = $"{old_path}{path}";
+		path = path.Replace('\\', '/').Replace("//", "/");
+		if (!path.EndsWith('/'))
+		{
+			path += "/";
+		}
+
+		self["package.path"] = $"{path}?.lua";
 	}
 	#endregion
 
