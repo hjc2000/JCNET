@@ -81,7 +81,13 @@ public class LuaWorkspace
 	}
 
 	/// <summary>
+	///		require 语句请求的模块的搜索路径。
+	/// </summary>
+	public HashSet<string> RequiredModuleSearchPaths { get; set; } = [];
+
+	/// <summary>
 	///		获取工作区内容。
+	///		<br/>* 会将 RequiredModuleSearchPaths 复制给 LuaWorkspaceContent 中的 SigleContent。
 	/// </summary>
 	public LuaWorkspaceContent Content
 	{
@@ -89,6 +95,11 @@ public class LuaWorkspace
 		{
 			LuaWorkspaceContent content = new(GetMainFileContent(),
 				CollectOtherFileContents());
+
+			foreach (string path in RequiredModuleSearchPaths)
+			{
+				content.SigleContent.RequiredModuleSearchPaths.Add(path);
+			}
 
 			return content;
 		}
