@@ -137,6 +137,11 @@ public class LuaWorkspaceContent
 	{
 		MainFileContent = main_file_content;
 		OtherFileContents = other_file_content;
+
+		StringBuilder content_builder = new();
+		content_builder.AppendLine(other_file_content);
+		content_builder.AppendLine(main_file_content);
+		SigleContent = new LuaCodeContent(content_builder.ToString());
 	}
 
 	/// <summary>
@@ -148,4 +153,9 @@ public class LuaWorkspaceContent
 	///		${工作区根目录}/main.lua 的内容被收集到这里。
 	/// </summary>
 	public string MainFileContent { get; set; } = string.Empty;
+
+	/// <summary>
+	///		整个工作区的 lua 文件整合成的单个 LuaCodeContent
+	/// </summary>
+	public LuaCodeContent SigleContent { get; }
 }
