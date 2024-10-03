@@ -215,6 +215,7 @@ public class LuaCodeContent
 	/// <returns></returns>
 	public override string ToString()
 	{
+		RemoveComment();
 		RemoveEmptyLine();
 		return _code;
 	}
