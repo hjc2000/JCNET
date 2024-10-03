@@ -167,7 +167,6 @@ public class LuaCodeContent
 			string? line = reader.ReadLine();
 			if (line is null)
 			{
-				sb.AppendLine();
 				_code = sb.ToString();
 				return;
 			}
