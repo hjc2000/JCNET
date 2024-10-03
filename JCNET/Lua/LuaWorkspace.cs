@@ -1,4 +1,5 @@
 ﻿using JCNET.字符串处理;
+using System.Text;
 
 namespace JCNET.Lua;
 
@@ -77,5 +78,31 @@ public class LuaWorkspace
 		{
 			return (_path + "main.lua").ToString();
 		}
+	}
+
+	/// <summary>
+	///		将工作区的所有 lua 文件合并成单个 LuaCodeContent，并且 ${工作区根目录}/main.lua
+	///		的内容位于最末尾。
+	/// </summary>
+	/// <returns></returns>
+	public LuaCodeContent ToSingleLua()
+	{
+		StringBuilder sb = new();
+		foreach (string path in LuaFilePaths)
+		{
+			using FileStream fs = File.OpenRead(path);
+			using StreamReader sr = new(fs);
+			sb.AppendLine(sr.ReadToEnd());
+		}
+
+		if (true)
+		{
+			using FileStream fs = File.OpenRead(MainFilePath);
+			using StreamReader sr = new(fs);
+			sb.AppendLine(sr.ReadToEnd());
+		}
+
+		LuaCodeContent lua = new(sb.ToString());
+		return lua;
 	}
 }
