@@ -107,18 +107,4 @@ public class LuaWorkspace
 		using StreamReader sr = new(fs);
 		return sr.ReadToEnd();
 	}
-
-	/// <summary>
-	///		将工作区的所有 lua 文件合并成单个 LuaCodeContent，并且 ${工作区根目录}/main.lua
-	///		的内容位于最末尾。
-	/// </summary>
-	/// <returns></returns>
-	public LuaCodeContent ToSingleLua()
-	{
-		StringBuilder sb = new();
-		sb.AppendLine(CollectOtherFileContents());
-		sb.AppendLine(GetMainFileContent());
-		LuaCodeContent lua = new(sb.ToString());
-		return lua;
-	}
 }
