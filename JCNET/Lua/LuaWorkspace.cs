@@ -19,9 +19,9 @@ public class LuaWorkspace
 	private StringPath _path;
 
 	/// <summary>
-	///		获取工作区中的 lua 文件。处理 out 目录下的和 ${工作区根目录}/main.lua
+	///		获取工作区中的 lua 文件。除了 out 目录下的文件和 ${工作区根目录}/main.lua
 	/// </summary>
-	public IEnumerable<string> LuaFiles
+	public IEnumerable<string> LuaFilePaths
 	{
 		get
 		{
@@ -65,6 +65,17 @@ public class LuaWorkspace
 			}
 
 			return result;
+		}
+	}
+
+	/// <summary>
+	///		获取 main.lua 的路径。
+	/// </summary>
+	public string MainFilePath
+	{
+		get
+		{
+			return (_path + "main.lua").ToString();
 		}
 	}
 }
