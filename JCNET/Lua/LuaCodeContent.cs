@@ -38,7 +38,7 @@ public class LuaCodeContent
 	/// <summary>
 	///		require 语句请求的模块的搜索路径。
 	/// </summary>
-	public HashSet<string> RequiredModuleSearchPaths { get; private set; }
+	public HashSet<string> RequiredModuleSearchPaths { get; set; }
 
 	/// <summary>
 	///		解析出代码中含有哪些 require 语句，请求了哪些模块，并将 require 语句移除。
