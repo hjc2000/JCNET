@@ -81,11 +81,10 @@ public class LuaWorkspace
 	}
 
 	/// <summary>
-	///		将工作区的所有 lua 文件合并成单个 LuaCodeContent，并且 ${工作区根目录}/main.lua
-	///		的内容位于最末尾。
+	///		收集 LuaFilePaths 中指示的所有文件，变成单个字符串。
 	/// </summary>
 	/// <returns></returns>
-	public LuaCodeContent ToSingleLua()
+	public string CollectOtherFileContents()
 	{
 		StringBuilder sb = new();
 		foreach (string path in LuaFilePaths)
@@ -95,13 +94,30 @@ public class LuaWorkspace
 			sb.AppendLine(sr.ReadToEnd());
 		}
 
-		if (true)
-		{
-			using FileStream fs = File.OpenRead(MainFilePath);
-			using StreamReader sr = new(fs);
-			sb.AppendLine(sr.ReadToEnd());
-		}
+		return sb.ToString();
+	}
 
+	/// <summary>
+	///		获取 ${工作区根目录}/main.lua 的内容。
+	/// </summary>
+	/// <returns></returns>
+	public string GetMainFileContent()
+	{
+		using FileStream fs = File.OpenRead(MainFilePath);
+		using StreamReader sr = new(fs);
+		return sr.ReadToEnd();
+	}
+
+	/// <summary>
+	///		将工作区的所有 lua 文件合并成单个 LuaCodeContent，并且 ${工作区根目录}/main.lua
+	///		的内容位于最末尾。
+	/// </summary>
+	/// <returns></returns>
+	public LuaCodeContent ToSingleLua()
+	{
+		StringBuilder sb = new();
+		sb.AppendLine(CollectOtherFileContents());
+		sb.AppendLine(GetMainFileContent());
 		LuaCodeContent lua = new(sb.ToString());
 		return lua;
 	}
