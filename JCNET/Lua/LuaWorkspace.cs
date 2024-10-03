@@ -89,7 +89,7 @@ public class LuaWorkspace
 	///		根据本工作区，创建一个新的 LuaWorkspaceContent。
 	///		<br/>* 会将 RequiredModuleSearchPaths 复制给 LuaWorkspaceContent 中的 SigleContent。
 	/// </summary>
-	public LuaWorkspaceContent CreateContent()
+	public LuaWorkspaceContent GetContent()
 	{
 		LuaWorkspaceContent content = new(GetMainFileContent(),
 			CollectOtherFileContents());
