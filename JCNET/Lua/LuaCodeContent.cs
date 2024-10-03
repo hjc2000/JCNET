@@ -89,7 +89,7 @@ public class LuaCodeContent
 		string module_path = module.Replace('.', '/');
 		foreach (string search_path in RequiredModuleSearchPaths)
 		{
-			string full_path = $"{search_path}/{module_path}";
+			string full_path = $"{search_path}/{module_path}.lua";
 			if (!File.Exists(full_path))
 			{
 				continue;
@@ -104,11 +104,19 @@ public class LuaCodeContent
 	}
 
 	/// <summary>
-	///		将 require 语句展开。
+	///		对 _code 执行一次 require 的扫描和展开。
+	///		展开后的内容可能又含有 require，所以需要多次调用本函数。
 	/// </summary>
-	public void ExpandRequire()
+	/// <returns>展开成功则返回 true。返回 false 表示展开失败，已经不再含有 require 语句了。</returns>
+	/// <exception cref="Exception"></exception>
+	private bool ExpandRequireOnce()
 	{
 		HashSet<string> modules = ParseRequiredModule();
+		if (modules.Count == 0)
+		{
+			return false;
+		}
+
 		foreach (string module in modules)
 		{
 			if (!_expanded_modules.Add(module))
@@ -123,6 +131,23 @@ public class LuaCodeContent
 			}
 
 			_code = $"{module_content}\r\n{_code}";
+		}
+
+		return true;
+	}
+
+	/// <summary>
+	///		将 require 语句展开。
+	/// </summary>
+	public void ExpandRequire()
+	{
+		while (true)
+		{
+			bool result = ExpandRequireOnce();
+			if (!result)
+			{
+				return;
+			}
 		}
 	}
 
