@@ -16,6 +16,8 @@ public class LuaCodeContent
 	{
 		_code = code;
 		RequiredModuleSearchPaths = [];
+		RemoveComment();
+		RemoveEmptyLine();
 	}
 
 	/// <summary>
@@ -24,8 +26,8 @@ public class LuaCodeContent
 	/// <param name="code"></param>
 	/// <param name="required_module_search_paths"></param>
 	public LuaCodeContent(string code, IEnumerable<string> required_module_search_paths)
+		: this(code)
 	{
-		_code = code;
 		RequiredModuleSearchPaths = [.. required_module_search_paths];
 	}
 
@@ -156,7 +158,7 @@ public class LuaCodeContent
 	///		去除空行。
 	/// </summary>
 	/// <returns></returns>
-	public string RemoveEmptyLine()
+	private void RemoveEmptyLine()
 	{
 		StringReader reader = new(_code);
 		StringBuilder sb = new();
@@ -166,10 +168,45 @@ public class LuaCodeContent
 			if (line is null)
 			{
 				sb.AppendLine();
-				return sb.ToString();
+				_code = sb.ToString();
+				return;
+			}
+
+			if (line.Trim() == string.Empty)
+			{
+				continue;
 			}
 
 			sb.AppendLine(line);
+		}
+	}
+
+	/// <summary>
+	///		删除注释
+	/// </summary>
+	/// <returns></returns>
+	private void RemoveComment()
+	{
+		StringBuilder sb = new();
+		StringReader reader = new(_code);
+		while (true)
+		{
+			string? line = reader.ReadLine();
+			if (line is null)
+			{
+				_code = sb.ToString();
+				return;
+			}
+
+			int index = line.IndexOf("--");
+			if (index == -1)
+			{
+				// 该行不含注释
+				sb.AppendLine(line);
+				continue;
+			}
+
+			sb.AppendLine(line[..index]);
 		}
 	}
 
