@@ -103,6 +103,22 @@ public class LuaWorkspace
 	}
 
 	/// <summary>
+	///		创建一个新的 lua 虚拟机并返回。
+	///		<br/>* 会将本工作区的 RequiredModuleSearchPaths 传递给 lua 虚拟机。
+	/// </summary>
+	/// <returns></returns>
+	public NLua.Lua GetLuaVm()
+	{
+		NLua.Lua lua = new();
+		foreach (string path in RequiredModuleSearchPaths)
+		{
+			lua.AddCustomRequireSearchPath(path);
+		}
+
+		return lua;
+	}
+
+	/// <summary>
 	///		收集 LuaFilePaths 中指示的所有文件，变成单个字符串。
 	/// </summary>
 	/// <returns></returns>
