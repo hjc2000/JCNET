@@ -81,24 +81,17 @@ public class LuaWorkspace
 	}
 
 	/// <summary>
-	///		LuaFilePaths 中指示的文件的内容被收集到本属性中。
-	///		在调用 RefreshContent 函数进行刷新之前，本属性为空字符串。
+	///		获取工作区内容。
 	/// </summary>
-	public string OtherFileContents { get; private set; } = string.Empty;
-
-	/// <summary>
-	///		${工作区根目录}/main.lua 的内容被收集到这里。
-	///		在调用 RefreshContent 函数进行刷新之前，本属性为空字符串。
-	/// </summary>
-	public string MainFileContent { get; private set; } = string.Empty;
-
-	/// <summary>
-	///		刷新 OtherFileContents 和 MainFileContent。
-	/// </summary>
-	public void RefreshContent()
+	public LuaWorkspaceContent Content
 	{
-		OtherFileContents = CollectOtherFileContents();
-		MainFileContent = GetMainFileContent();
+		get
+		{
+			LuaWorkspaceContent content = new(GetMainFileContent(),
+				CollectOtherFileContents());
+
+			return content;
+		}
 	}
 
 	/// <summary>
@@ -128,4 +121,31 @@ public class LuaWorkspace
 		using StreamReader sr = new(fs);
 		return sr.ReadToEnd();
 	}
+}
+
+/// <summary>
+///		lua 工作区内容。
+/// </summary>
+public class LuaWorkspaceContent
+{
+	/// <summary>
+	///		lua 工作区内容。
+	/// </summary>
+	/// <param name="main_file_content"></param>
+	/// <param name="other_file_content"></param>
+	public LuaWorkspaceContent(string main_file_content, string other_file_content)
+	{
+		MainFileContent = main_file_content;
+		OtherFileContents = other_file_content;
+	}
+
+	/// <summary>
+	///		LuaFilePaths 中指示的文件的内容被收集到本属性中。
+	/// </summary>
+	public string OtherFileContents { get; } = string.Empty;
+
+	/// <summary>
+	///		${工作区根目录}/main.lua 的内容被收集到这里。
+	/// </summary>
+	public string MainFileContent { get; set; } = string.Empty;
 }
