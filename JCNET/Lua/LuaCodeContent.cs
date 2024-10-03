@@ -1,4 +1,5 @@
 ﻿using JCNET.字符串处理;
+using System.Text;
 
 namespace JCNET.Lua;
 
@@ -148,6 +149,27 @@ public class LuaCodeContent
 			{
 				return;
 			}
+		}
+	}
+
+	/// <summary>
+	///		去除空行。
+	/// </summary>
+	/// <returns></returns>
+	public string RemoveEmptyLine()
+	{
+		StringReader reader = new(_code);
+		StringBuilder sb = new();
+		while (true)
+		{
+			string? line = reader.ReadLine();
+			if (line is null)
+			{
+				sb.AppendLine();
+				return sb.ToString();
+			}
+
+			sb.AppendLine(line);
 		}
 	}
 
