@@ -14,13 +14,13 @@ public class LuaWorkspace
 	/// <param name="path">工作区路径</param>
 	public LuaWorkspace(string path)
 	{
-		_path = new StringPath(path);
+		_wordspace_dir = new StringPath(path);
 	}
 
 	/// <summary>
 	///		工作区路径
 	/// </summary>
-	private StringPath _path;
+	private StringPath _wordspace_dir;
 
 	/// <summary>
 	///		获取工作区中的 lua 文件。除了 out 目录下的文件和 ${工作区根目录}/main.lua
@@ -34,7 +34,7 @@ public class LuaWorkspace
 				RecurseSubdirectories = true,
 			};
 
-			IEnumerable<string> paths = Directory.EnumerateFiles(_path.ToString(),
+			IEnumerable<string> paths = Directory.EnumerateFiles(_wordspace_dir.ToString(),
 				"*", options);
 
 			List<string> result = [];
@@ -53,7 +53,7 @@ public class LuaWorkspace
 					continue;
 				}
 
-				if (corrcted_path == (_path + "main.lua").ToString())
+				if (corrcted_path == (_wordspace_dir + "main.lua").ToString())
 				{
 					continue;
 				}
@@ -79,7 +79,7 @@ public class LuaWorkspace
 	{
 		get
 		{
-			return (_path + "main.lua").ToString();
+			return (_wordspace_dir + "main.lua").ToString();
 		}
 	}
 
@@ -147,6 +147,28 @@ public class LuaWorkspace
 		using FileStream fs = File.OpenRead(MainFilePath);
 		using StreamReader sr = new(fs);
 		return sr.ReadToEnd();
+	}
+
+	/// <summary>
+	///		将 lua 代码内容字符串写入输出文件 ${工作区目录}/out/out.lua 中。
+	///		<br/>* out.lua 始终是新建的空白文件。
+	/// </summary>
+	/// <param name="lua_code_content"></param>
+	public void Output(string lua_code_content)
+	{
+		string out_dir = (_wordspace_dir + "out").ToString();
+		if (!Directory.Exists(out_dir))
+		{
+			Directory.CreateDirectory(out_dir);
+		}
+
+		using FileStream out_file = File.Open($"{out_dir}/out.lua",
+			FileMode.Create,
+			FileAccess.ReadWrite,
+			FileShare.Read);
+
+		using StreamWriter writer = new(out_file);
+		writer.Write(lua_code_content);
 	}
 }
 
