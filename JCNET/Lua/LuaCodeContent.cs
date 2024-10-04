@@ -155,6 +155,43 @@ public class LuaCodeContent
 	}
 
 	/// <summary>
+	///		改变函数定义方式。将 function name() end 改成 name = function() end 这种形式。
+	/// </summary>
+	public void ChangeFunctionDefinitionFormat()
+	{
+		HashSet<string> name_set = CollectFunctionName();
+		foreach (string name in name_set)
+		{
+			_code = _code.ReplaceTwoWord("function", name,
+				$"{name} = function").ToString();
+		}
+	}
+
+	/// <summary>
+	///		通过函数定义收集函数名。
+	/// </summary>
+	/// <returns></returns>
+	private HashSet<string> CollectFunctionName()
+	{
+		StringReader reader = new(_code);
+		HashSet<string> name_set = [];
+		while (true)
+		{
+			string? line = reader.ReadLine();
+			if (line is null)
+			{
+				return name_set;
+			}
+
+			string function_name = line.GetBetween("function", "(").Trim().ToString();
+			if (function_name != string.Empty)
+			{
+				name_set.Add(function_name);
+			}
+		}
+	}
+
+	/// <summary>
 	///		去除空行。
 	/// </summary>
 	/// <returns></returns>
