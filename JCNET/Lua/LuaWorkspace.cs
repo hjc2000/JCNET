@@ -11,12 +11,15 @@ public class LuaWorkspace
 	/// <summary>
 	///		lua 工作区
 	/// </summary>
-	/// <param name="path"></param>
+	/// <param name="path">工作区路径</param>
 	public LuaWorkspace(string path)
 	{
 		_path = new StringPath(path);
 	}
 
+	/// <summary>
+	///		工作区路径
+	/// </summary>
 	private StringPath _path;
 
 	/// <summary>
