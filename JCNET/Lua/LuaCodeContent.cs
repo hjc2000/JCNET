@@ -11,13 +11,18 @@ public class LuaCodeContent
 	/// <summary>
 	///		lua 代码内容
 	/// </summary>
+	public LuaCodeContent()
+	{
+
+	}
+
+	/// <summary>
+	///		lua 代码内容
+	/// </summary>
 	/// <param name="code"></param>
 	public LuaCodeContent(string code)
 	{
 		Code = code;
-		RequiredModuleSearchPaths = [];
-		RemoveComment();
-		RemoveEmptyLine();
 	}
 
 	/// <summary>
@@ -36,6 +41,55 @@ public class LuaCodeContent
 	/// </summary>
 	public string Code { get; set; } = string.Empty;
 
+	// 去除空行
+	private void RemoveEmptyLine()
+	{
+		StringReader reader = new(Code);
+		StringBuilder sb = new();
+		while (true)
+		{
+			string? line = reader.ReadLine();
+			if (line is null)
+			{
+				Code = sb.ToString();
+				return;
+			}
+
+			if (line.Trim() == string.Empty)
+			{
+				continue;
+			}
+
+			sb.AppendLine(line);
+		}
+	}
+
+	// 删除注释
+	private void RemoveComment()
+	{
+		StringBuilder sb = new();
+		StringReader reader = new(Code);
+		while (true)
+		{
+			string? line = reader.ReadLine();
+			if (line is null)
+			{
+				Code = sb.ToString();
+				return;
+			}
+
+			int index = line.IndexOf("--");
+			if (index == -1)
+			{
+				// 该行不含注释
+				sb.AppendLine(line);
+				continue;
+			}
+
+			sb.AppendLine(line[..index]);
+		}
+	}
+
 	/// <summary>
 	///		已经被展开的模块放到这里，避免重复展开。
 	/// </summary>
@@ -44,7 +98,7 @@ public class LuaCodeContent
 	/// <summary>
 	///		require 语句请求的模块的搜索路径。
 	/// </summary>
-	public HashSet<string> RequiredModuleSearchPaths { get; set; }
+	public HashSet<string> RequiredModuleSearchPaths { get; set; } = [];
 
 	/// <summary>
 	///		解析出代码中含有哪些 require 语句，请求了哪些模块，并将 require 语句移除。
@@ -111,13 +165,18 @@ public class LuaCodeContent
 	}
 
 	/// <summary>
-	///		对 _code 执行一次 require 的扫描和展开。
+	///		对 Code 执行一次 require 的扫描和展开。
 	///		展开后的内容可能又含有 require，所以需要多次调用本函数。
 	/// </summary>
 	/// <returns>展开成功则返回 true。返回 false 表示展开失败，已经不再含有 require 语句了。</returns>
 	/// <exception cref="Exception"></exception>
 	private bool ExpandRequireOnce()
 	{
+		// 分析前先去除所有注释和空行
+		RemoveComment();
+		RemoveEmptyLine();
+
+		// 先整体分析一遍，获取并移除所有的 require 语句
 		HashSet<string> modules = ParseRequiredModule();
 		if (modules.Count == 0)
 		{
@@ -140,8 +199,6 @@ public class LuaCodeContent
 			Code = $"{module_content}\r\n{Code}";
 		}
 
-		RemoveComment();
-		RemoveEmptyLine();
 		return true;
 	}
 
@@ -194,61 +251,6 @@ public class LuaCodeContent
 			{
 				name_set.Add(function_name);
 			}
-		}
-	}
-
-	/// <summary>
-	///		去除空行。
-	/// </summary>
-	/// <returns></returns>
-	private void RemoveEmptyLine()
-	{
-		StringReader reader = new(Code);
-		StringBuilder sb = new();
-		while (true)
-		{
-			string? line = reader.ReadLine();
-			if (line is null)
-			{
-				Code = sb.ToString();
-				return;
-			}
-
-			if (line.Trim() == string.Empty)
-			{
-				continue;
-			}
-
-			sb.AppendLine(line);
-		}
-	}
-
-	/// <summary>
-	///		删除注释
-	/// </summary>
-	/// <returns></returns>
-	private void RemoveComment()
-	{
-		StringBuilder sb = new();
-		StringReader reader = new(Code);
-		while (true)
-		{
-			string? line = reader.ReadLine();
-			if (line is null)
-			{
-				Code = sb.ToString();
-				return;
-			}
-
-			int index = line.IndexOf("--");
-			if (index == -1)
-			{
-				// 该行不含注释
-				sb.AppendLine(line);
-				continue;
-			}
-
-			sb.AppendLine(line[..index]);
 		}
 	}
 
