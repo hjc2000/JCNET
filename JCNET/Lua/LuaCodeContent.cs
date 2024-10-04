@@ -14,7 +14,7 @@ public class LuaCodeContent
 	/// <param name="code"></param>
 	public LuaCodeContent(string code)
 	{
-		_code = code;
+		Code = code;
 		RequiredModuleSearchPaths = [];
 		RemoveComment();
 		RemoveEmptyLine();
@@ -31,7 +31,10 @@ public class LuaCodeContent
 		RequiredModuleSearchPaths = [.. required_module_search_paths];
 	}
 
-	private string _code = string.Empty;
+	/// <summary>
+	///		lua 代码内容
+	/// </summary>
+	public string Code { get; set; } = string.Empty;
 
 	/// <summary>
 	///		已经被展开的模块放到这里，避免重复展开。
@@ -49,17 +52,18 @@ public class LuaCodeContent
 	/// <returns>返回 require 语句所请求的模块。</returns>
 	private HashSet<string> ParseRequiredModule()
 	{
+		// 解析第 1 条 require 语句并将其移除
 		string? ParseFirstRequiredModule()
 		{
-			string module = _code.GetBetween(@"require(""", @""")").ToString();
-			_code = _code.ReplaceWholeMatch($"require(\"{module}\")", string.Empty).ToString();
+			string module = Code.GetBetween(@"require(""", @""")").ToString();
+			Code = Code.ReplaceWholeMatch($"require(\"{module}\")", string.Empty).ToString();
 			if (module != string.Empty)
 			{
 				return module;
 			}
 
-			module = _code.GetBetween(@"require('", @"')").ToString();
-			_code = _code.ReplaceWholeMatch($"require(\'{module}\')", string.Empty).ToString();
+			module = Code.GetBetween(@"require('", @"')").ToString();
+			Code = Code.ReplaceWholeMatch($"require(\'{module}\')", string.Empty).ToString();
 			if (module != string.Empty)
 			{
 				return module;
@@ -133,9 +137,11 @@ public class LuaCodeContent
 				throw new Exception($"无法找到模块：{module}");
 			}
 
-			_code = $"{module_content}\r\n{_code}";
+			Code = $"{module_content}\r\n{Code}";
 		}
 
+		RemoveComment();
+		RemoveEmptyLine();
 		return true;
 	}
 
@@ -162,7 +168,7 @@ public class LuaCodeContent
 		HashSet<string> name_set = CollectFunctionName();
 		foreach (string name in name_set)
 		{
-			_code = _code.ReplaceTwoWord("function", name,
+			Code = Code.ReplaceTwoWord("function", name,
 				$"{name} = function").ToString();
 		}
 	}
@@ -173,7 +179,7 @@ public class LuaCodeContent
 	/// <returns></returns>
 	private HashSet<string> CollectFunctionName()
 	{
-		StringReader reader = new(_code);
+		StringReader reader = new(Code);
 		HashSet<string> name_set = [];
 		while (true)
 		{
@@ -197,14 +203,14 @@ public class LuaCodeContent
 	/// <returns></returns>
 	private void RemoveEmptyLine()
 	{
-		StringReader reader = new(_code);
+		StringReader reader = new(Code);
 		StringBuilder sb = new();
 		while (true)
 		{
 			string? line = reader.ReadLine();
 			if (line is null)
 			{
-				_code = sb.ToString();
+				Code = sb.ToString();
 				return;
 			}
 
@@ -224,13 +230,13 @@ public class LuaCodeContent
 	private void RemoveComment()
 	{
 		StringBuilder sb = new();
-		StringReader reader = new(_code);
+		StringReader reader = new(Code);
 		while (true)
 		{
 			string? line = reader.ReadLine();
 			if (line is null)
 			{
-				_code = sb.ToString();
+				Code = sb.ToString();
 				return;
 			}
 
@@ -252,8 +258,6 @@ public class LuaCodeContent
 	/// <returns></returns>
 	public override string ToString()
 	{
-		RemoveComment();
-		RemoveEmptyLine();
-		return _code;
+		return Code;
 	}
 }
